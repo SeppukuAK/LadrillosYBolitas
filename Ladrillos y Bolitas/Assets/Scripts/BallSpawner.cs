@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BallSpawner : MonoBehaviour {
+public class BallSpawner : MonoBehaviour
+{
 
-    public int Balls;
+    [Header("Atributtes")]
+    public float SpawnRate;
     public Vector2 Velocity;
-    public Vector2 BallSpawnPosition;
 
+    [Header("References")]
     public Ball BallPrefab;
 
-    // Use this for initialization
-    void Start () {
-        StartCoroutine(SpawnBalls());
-	}
-	
-    private IEnumerator SpawnBalls()
+    public bool FirstRoundCollision { get; set; }
+
+    public void SpawnBalls(int numBalls)
     {
-        for (int i = 0; i < Balls; i++)
+        StartCoroutine(SpawnBallsRoutine(numBalls));
+    }
+
+    private IEnumerator SpawnBallsRoutine(int numBalls)
+    {
+        for (int i = 0; i < numBalls; i++)
         {
-            Ball ball = Instantiate(BallPrefab, BallSpawnPosition,Quaternion.identity);
+            Ball ball = Instantiate(BallPrefab, transform.position, Quaternion.identity);
             ball.SetVelocity(Velocity);
-            yield return new WaitForSeconds(0.1f);
+            yield return new WaitForSeconds(SpawnRate);
         }
         yield return null;
     }
