@@ -96,5 +96,52 @@ BoardManager:
 	Tien el array de tiles
 	Tile[,] _board
 
-LevelManager: BallSpawner, BallSkin, AimController, Deathzone, BoardManager
+LevelManager: BallSpawner, BallSink, AimController, Deathzone, BoardManager
 No es singleton
+
+Un delegado es una funcion que se pasa como parametro
+
+En moviles es un circo el aspect Ratio
+
+Hay que tener sprites diferentes para cada tipo DPI
+
+Relacion de aspecto del tablero:
+11,25 ancho
+14 alto
+
+Persistencia
+
+subnormal
+
+Hay que guardar el progreso del jugador
+
+Serializacion.
+
+c# tiene serializacion nativa.
+
+unity tiene la propia para json
+jsonutilities.
+Le enchufas una clase y te la convierte
+Hay que marcar las clases como serializables.
+No funciona muy bien. Sobre todo con diccionararios.
+Nos da una cadena que podremos guardar en una cadena de un fichero.
+
+Esta la operacion inversa:
+le das una cadena y te devuelve el progreso del jugador.
+
+Persistencia
+
+En Unity hay PlayerPrefs. 
+Es un diccionario en el que guardas cosas: Volumen = 5
+No le gusta.
+
+Otra opcion son los ficheros
+
+La opcion es en la nube""
+
+para guardarlo lo guardamos en el sistema
+
+WINDOWS: regedit.exe
+
+primer nivel de proteccion: Añadir una Hash: Es una funcion probabilisticamene inyectiva.
+Una hash sirve para resumir

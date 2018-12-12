@@ -3,48 +3,87 @@ using System.Collections;
 
 /// <summary>
 /// Controla el comportamiento de la pelota
+/// Tiene métodos para asignarle una velocidad y para moverle a un punto
 /// </summary>
+[RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
-    public float Speed;
     private Rigidbody2D rb;
-    private Collider2D collider2D;
 
+    /// <summary>
+    /// Obtiene referencias
+    /// </summary>
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        collider2D = GetComponent<Collider2D>();
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (rb == null)
+            Debug.LogError("ME FALTA EL RIGIDBODY");
+#endif
     }
 
-    public void SetVelocity(Vector2 vel)
+    /// <summary>
+    /// Da una velocidad a la pelota
+    /// </summary>
+    /// <param name="vel"></param>
+    public void StartMoving(Vector2 vel)
     {
         rb.velocity = new Vector2(vel.x, vel.y);
     }
 
-    public void OnFirstDead()
+    /// <summary>
+    /// Para el rigidbody de la pelota
+    /// </summary>
+    public void Stop()
     {
-        rb.velocity = new Vector2(0.0f, 0.0f);
-        collider2D.isTrigger = true;
+        rb.velocity = Vector2.zero;
     }
 
-    public void MoveToSink(Vector3 pos, float SinkVelocity)
+    /// <summary>
+    /// Establece la coordenada Y de la pelota
+    /// </summary>
+    public void SetYPos(float y)
     {
-        rb.velocity = new Vector2(0.0f, 0.0f);
-        collider2D.isTrigger = true;
-        StartCoroutine(MoveToSinkRoutine(pos, SinkVelocity));
+        transform.position = new Vector3(transform.position.x, y, transform.position.z);
     }
 
-    private IEnumerator MoveToSinkRoutine(Vector3 pos, float SinkVelocity)
+    /// <summary>
+    /// Empieza la corrutina de movimiento a una posición en el tiempo establecido
+    /// Llamará a endMoveCallback cuando haya llegado al destino
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="vel"></param>
+    /// <param name="endMove"></param>
+    public void MoveTo(Vector3 pos , float time, System.Action<Ball> endMoveCallback = null)
     {
-        //TODO: Ver si acaba
-        while (Mathf.Abs((transform.position - pos).magnitude) > 0.1f)
+        StartCoroutine(MoveToCoroutine(pos, time, endMoveCallback));
+    }
+
+    /// <summary>
+    /// Corrutina que mueve la pelota hasta un punto en el tiempo establecido
+    /// Llamará a endMoveCallback cuando haya llegado al destino
+    /// </summary>
+    /// <param name="pos"></param>
+    /// <param name="vel"></param>
+    /// <param name="endMove"></param>
+    /// <returns></returns>
+    private IEnumerator MoveToCoroutine(Vector3 pos, float time, System.Action<Ball> endMoveCallback = null)
+    {
+        float totalTicks = time / Time.fixedDeltaTime;
+        float distancePerTick = (pos - transform.position).magnitude / totalTicks;
+        Vector2 dir = (pos - transform.position).normalized;
+
+        //Movimiento hasta la posición
+        for (int i = 0; i < totalTicks; i++)
         {
-            Vector3 dir = (transform.position - pos).normalized;
-            transform.position -= dir * SinkVelocity * Time.deltaTime;
+            rb.position += dir * distancePerTick;
             yield return new WaitForFixedUpdate();
         }
 
-        Destroy(gameObject);
+        //Llama al callback
+        if (endMoveCallback != null)
+            endMoveCallback(this);
+
         yield return null;
     }
 }
