@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Block : MonoBehaviour
-{
+public class Tile : MonoBehaviour {
+
+    public int X { get; set; }
+    public int Y { get; set; }
+
+    LevelManager _levelManager;
+
     public Text HealthText;
 
-    private int health;
-    public int Health
+    private uint health;
+    public uint Health
     {
         get { return health; }
         set
@@ -18,9 +23,12 @@ public class Block : MonoBehaviour
         }
     }
 
-    private void Start()
+    public void Init(LevelManager levelManager, uint pendingTouches, int x, int y)
     {
-        Health = 20;
+        X = x;
+        Y = y;
+        Health = pendingTouches;
+        _levelManager = levelManager;
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

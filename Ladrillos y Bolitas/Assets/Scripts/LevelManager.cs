@@ -15,9 +15,11 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private BallSpawner ballSpawner;
     [SerializeField] private BallSink ballSink;
     [SerializeField] private DeathZone deathZone;
+    [SerializeField] private Board board;
 
     [Header("Test Attributes")]
     [SerializeField] private Vector2 ballVelocity;
+    [SerializeField] private TextAsset map;//Mapa con la informacion del juego
 
     public uint CurrentNumBalls { get; set; }
 
@@ -35,6 +37,7 @@ public class LevelManager : MonoBehaviour
         ballSpawner.Init(ballPrefab, ballSpawnTickRate);
         ballSink.Init(this,30);
         deathZone.Init(this, ballToSinkTime, ballSink.OnBallArrived);
+        board.Init(this, map);
     }
 
     /// <summary>
