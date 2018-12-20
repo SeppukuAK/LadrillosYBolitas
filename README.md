@@ -262,3 +262,40 @@ public class SalirYVolver : MonoBehaviour {
 #endif
 
 }
+
+
+ESTO ES DEL PRIMER DIA CON UNITY
+-----------COSAS RARAS CON SOLO SDK--------------------
+
+Tiene el emulador abierto y puede lanzarlo ahi. No se como
+
+DOnde esta la sdk instalada:
+tools/bin/avdmanager.bat list avd
+
+ADB. Punto de dupuración de android. Para depurar en Unity android
+
+platform-tools/ adb devices
+Muestra los dispositivos coenctados
+
+adb install e:cubo.apk
+Cuando se hace una build para android en Unity. Se tiene en cuenta el hardware
+
+Lo que hace pepa para hacer build rapida:
+se crea un .cat
+set PATH=%PATH ERES UN GILIPOLLAS SUBNORMAL TE PARTIA LA CARA
+
+abre cmd:
+-android
+-magia
+
+adb install cubo.apk
+adb -e -> Emulador
+adb -d -> Movil
+adb -s "Numero de serie" -> Cuando hay muchas cosas conectadas
+adb install -r cubo.apk -> Si existe lo borra y crea el nuevo
+
+abd shell -> Cosas araras de meterse por los archivos del dispositivo
+
+Para que existan los debug.log. Unity los mapea a .log de Android
+
+-----------COSAS RARAS CON SOLO SDK--------------------
