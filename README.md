@@ -145,3 +145,120 @@ WINDOWS: regedit.exe
 
 primer nivel de proteccion: Añadir una Hash: Es una funcion probabilisticamene inyectiva.
 Una hash sirve para resumir
+
+
+
+---------------18-12-2018---------------
+
+--> Examen : en lab y habra parte de teoria y parte de practica que sera sobre nuestras prácticas
+
+///  Adds: como funcionan los anuncios?  ////
+
+El modelo que se usa es que hay intermediarios que se ponen en contacto con anunciantes
+Lo normal es que el que tiene la pag /juego se conecta con un proveedor de publicidad(intermediario) y elige el anuncio y a su vez Los anunciantes hablan con el intermediario 
+y ofrecen sus anuncios.
+
+En Internet se tiene un perfil amplio de los Usuarios
+Google adds, double click (comprado por Google)
+
+Los intermediarios ponen una cantidad de ingresos a la que tiene que llegar para monetizar
+
+IAP/IAB: in application purchases
+
+Cuando tenemos acceso a lo que tiene Unity para los ads(??? ---> Unity ads. hay que tener una organización en Unity Teams(?, se asocia un id de proyecto y se pueden activar adds. Tenemos que descargamos el plugin para adds
+ 
+permite poner un banner en la parte de abajo y a pantalla completa (Un poco kk)
+
+abrimos la parte de los servicios de unity -> en assets, tenemos un id de unity en los servidores de unity aaa
+
+id.unity.com tiene el dashboard con el panel de control de nuestro proyecto
+
+Se puede ver de forma separada las ganancias en android e IOS
+
+En nuestra practica se verán los placeholders de los anuncios, pero nada más
+
+Si se hace dede el editor unity manda un mensaje(?)
+
+chart boost(?) mas funcionalidades que Unity (Oji)
+
+**hay que subir el juego a la plataforma, hacerlo para android e ios (esto no es para la practiqui)
+
+**holi
+
+**:
+
+**yay
+
+
+
+Cuando se crea una cuenta de desarrollador, cuando se sube el apk, hay que firmarlo (firma digital)
+Diferencia entre http y https, tienes un certificado digital()
+
+
+Dos formas de encriptar -> encriptacion simetrica : encriptacion en la que el emisor y receptor tienen un secreto compartido(password) : cifrado cesar
+el receptor usa la contraseña para leer el mensaje
+
+En Amazon se usa encriptacion simetrica, tiene un problema: se necesita un secreto compartido // para comunicacion con gente random no sirve - se necesita un canal seguro donde se haya podido compartir la info
+
+amigui 
+
+encriptacion asimetrica: se calculan a la vez dos claves, una para encriptar y la otra para desencriptar, con una sola clave no se puede
+
+amigui
+
+si quiero mandar algo te doy el candadoy me guardo la llave(??????) al mundo le digo mi clave de encriptacion, el resto lo encripta y yo lo desencripto (es MUUY LENTAAAAAAAA)
+
+entidad certificadora es 
+
+
+
+
+---------------18-12-2018---------------
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Acelerometro : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+		
+	}
+	
+	// Update is called once per frame
+	void Update () {
+        Vector3 ac = Input.acceleration;
+	}
+}
+
+
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SalirYVolver : MonoBehaviour {
+
+	// Use this for initialization
+	void Start () {
+
+#if !UNITY_ANDROID
+        Destroy(this.gameObject);
+#endif
+
+    }
+
+#if UNITY_ANDROID
+
+    // Update is called once per frame
+    void Update () {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Application.Quit(); //Se carga la aplicación :(
+                                //Hay que ser amables :(
+        }
+    }
+#endif
+
+}

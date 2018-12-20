@@ -16,6 +16,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private BallSink ballSink;
     [SerializeField] private DeathZone deathZone;
     [SerializeField] private Board board;
+    [SerializeField] private AimController aimController;
 
     [Header("Test Attributes")]
     [SerializeField] private Vector2 ballVelocity;
@@ -38,6 +39,7 @@ public class LevelManager : MonoBehaviour
         ballSink.Init(this,30);
         deathZone.Init(this, ballToSinkTime, ballSink.OnBallArrived);
         board.Init(this, map);
+        aimController.Init(ballSpawner);
     }
 
     /// <summary>
