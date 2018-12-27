@@ -8,13 +8,12 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BallSink : MonoBehaviour
 {
-    //References
+    //Own References
     private Text labelText;
     private SpriteRenderer ballSprite;
-    private LevelManager _levelManager;
 
-    //TODO: Yo esto no se si esta bien. Consultar
-    public delegate void OnBallSinkArrived(Ball ball);
+    //Other References
+    private LevelManager _levelManager;
 
     /// <summary>
     /// Numero actual de pelotas que han llegado al ballsink durante esta ronda
@@ -29,12 +28,22 @@ public class BallSink : MonoBehaviour
     private uint totalNumBalls;
 
     /// <summary>
+    /// Coordenada Y en la que se debe forzar la posición del sumidero y de las pelotas
+    /// </summary>
+    public float SinkYPos;
+
+    /// <summary>
     /// Obtiene referencias
     /// </summary>
     private void Awake()
     {
         ballSprite = GetComponent<SpriteRenderer>();
         labelText = GetComponentInChildren<Text>();
+    }
+
+    private void Start()
+    {
+        SinkYPos = transform.position.y;
     }
 
     /// <summary>
@@ -92,6 +101,5 @@ public class BallSink : MonoBehaviour
 
         if (CurrentNumBalls == totalNumBalls)
             _levelManager.RoundEnd();
-
     }
 }

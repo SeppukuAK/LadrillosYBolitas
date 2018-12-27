@@ -1,25 +1,31 @@
 LadrillosYBolitas
 
-Mirar canvas raro ese que ha dicho de proyeccion
-Spawner de pelotas
-Gamefield  Un gameObject en la escena que si ponemos un prefab en el 0,0, se ponga en la esquina inferior izquierda
+Mencionó un Canvas raro de proyección
 
-//Componentes
-BallSpaw, sumidero, deathZone,constructor(creador mapa), detector de input
+Gamefield: Un gameObject en la escena que si ponemos un prefab en el 0,0, se ponga en la esquina inferior izquierda
 
-Tile con metodos virtuales
+-------- ASPECT RATIO ---------
+EN codigo preguntar al screen el tamaño (width y height) sabiendo los pixeles de ancho 
 
-EN codigo preguntar al screen el tamaño (width y height) sabiendo los pixeles de ancho :(..........
 asumir resolucion de 800x1280 (menos que 3/2)
+En moviles es un circo el aspect Ratio
 
+Hay que tener sprites diferentes para cada tipo DPI
+
+Relacion de aspecto del tablero:
+11,25 ancho
+14 alto
+-------- ASPECT RATIO ---------
+
+-------- SPRITES ---------
+
+Todos los sprites:
 "64" pixeles como sistema de coordenadas
 
-go vacio GameField de tal manera que al poner un bloque en 0,0 se ponga abajo a la izq del tab logico aunque no este centrado
-
 Recortar los sprites para que las casillas sean de 60x60
+-------- SPRITES ---------
 
-Componentes:
-Hay sumidero y ballSpawner
+//Componentes
 
 -Ball. 
 	-Start()
@@ -92,31 +98,18 @@ Tile:
 				_levelManager.TileDestroyed(this);
 		}
 
-BoardManager:
+BoardManager o constructor(creador mapa):
 	Tien el array de tiles
 	Tile[,] _board
 
-LevelManager: BallSpawner, BallSink, AimController, Deathzone, BoardManager
+LevelManager: BallSpawner, BallSink, AimController o detector de input, Deathzone, BoardManager
 No es singleton
 
 Un delegado es una funcion que se pasa como parametro
 
-En moviles es un circo el aspect Ratio
-
-Hay que tener sprites diferentes para cada tipo DPI
-
-Relacion de aspecto del tablero:
-11,25 ancho
-14 alto
-
-Persistencia
-
-subnormal
-
-Hay que guardar el progreso del jugador
-
+---Cosas de guardado-----
+Persistencia. Hay que guardar el progreso del jugador
 Serializacion.
-
 c# tiene serializacion nativa.
 
 unity tiene la propia para json
@@ -146,10 +139,11 @@ WINDOWS: regedit.exe
 primer nivel de proteccion: Añadir una Hash: Es una funcion probabilisticamene inyectiva.
 Una hash sirve para resumir
 
-
+---Cosas de guardado-----
 
 ---------------18-12-2018---------------
 
+-------ANUNCIOS-------------
 --> Examen : en lab y habra parte de teoria y parte de practica que sera sobre nuestras prácticas
 
 ///  Adds: como funcionan los anuncios?  ////
@@ -183,14 +177,6 @@ chart boost(?) mas funcionalidades que Unity (Oji)
 
 **hay que subir el juego a la plataforma, hacerlo para android e ios (esto no es para la practiqui)
 
-**holi
-
-**:
-
-**yay
-
-
-
 Cuando se crea una cuenta de desarrollador, cuando se sube el apk, hay que firmarlo (firma digital)
 Diferencia entre http y https, tienes un certificado digital()
 
@@ -200,17 +186,14 @@ el receptor usa la contraseña para leer el mensaje
 
 En Amazon se usa encriptacion simetrica, tiene un problema: se necesita un secreto compartido // para comunicacion con gente random no sirve - se necesita un canal seguro donde se haya podido compartir la info
 
-amigui 
-
 encriptacion asimetrica: se calculan a la vez dos claves, una para encriptar y la otra para desencriptar, con una sola clave no se puede
-
-amigui
 
 si quiero mandar algo te doy el candadoy me guardo la llave(??????) al mundo le digo mi clave de encriptacion, el resto lo encripta y yo lo desencripto (es MUUY LENTAAAAAAAA)
 
 entidad certificadora es 
 
 
+-------ANUNCIOS-------------
 
 
 ---------------18-12-2018---------------
@@ -299,3 +282,4 @@ abd shell -> Cosas araras de meterse por los archivos del dispositivo
 Para que existan los debug.log. Unity los mapea a .log de Android
 
 -----------COSAS RARAS CON SOLO SDK--------------------
+

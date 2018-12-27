@@ -8,6 +8,7 @@ public class DeathZone : MonoBehaviour
 {
     //References
     private LevelManager _levelManager;
+    private BallSink _ballSink;
 
     /// <summary>
     /// Tiempo que tarda la pelota en llegar al Sink
@@ -21,11 +22,6 @@ public class DeathZone : MonoBehaviour
     private Vector3 ballSinkPos;
 
     /// <summary>
-    /// Función a ejecutar cuando una pelota llega al sink
-    /// </summary>
-    private BallSink.OnBallSinkArrived _onBallSinkArrivedCallback;
-
-    /// <summary>
     /// Inicializa el deathZone desde levelManager. 
     /// Le pasa referencias necesarias
     /// Se subscribe a eventos de rondas
@@ -33,11 +29,11 @@ public class DeathZone : MonoBehaviour
     /// <param name="levelManager"></param>
     /// <param name="ballToSinkTime"></param>
     /// <param name="onBallSinkArrivedCallback"></param>
-    public void Init(LevelManager levelManager, float ballToSinkTime, BallSink.OnBallSinkArrived onBallSinkArrivedCallback)
+    public void Init(LevelManager levelManager, BallSink ballSink, float ballToSinkTime)
     {
         _levelManager = levelManager;
+        _ballSink = ballSink;
         _ballToSinkTime = ballToSinkTime;
-        _onBallSinkArrivedCallback = onBallSinkArrivedCallback;
         levelManager.OnRoundStartCallback += OnRoundStart;
     }
 
@@ -61,18 +57,23 @@ public class DeathZone : MonoBehaviour
         {
             //Ha chocado la primera pelota
             if (ballSinkPos == Vector3.zero)
-                ballSinkPos =  _levelManager.FirstBallDeath(ball);
+            {   
+                ballSinkPos = new Vector3(ball.transform.position.x, _ballSink.SinkYPos, ball.transform.position.z);
+                _ballSink.Show(ballSinkPos);
+                _ballSink.OnBallArrived(ball);
+            }
 
             //No es la primera pelota
             else
             {
                 //Para la pelota, fuerza su posición en Y y llama a la corrutina de movimiento hacia el sink
                 ball.Stop();
-                ball.SetYPos(ballSinkPos.y);
-                ball.MoveTo(ballSinkPos, _ballToSinkTime, _onBallSinkArrivedCallback.Invoke);
+                ball.SetYPos(_ballSink.SinkYPos);
+                ball.MoveTo(ballSinkPos, _ballToSinkTime, _ballSink.OnBallArrived);
             }
-
         }
     }
+
+
 }
 

@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-
-
 class Board : MonoBehaviour
 {
-    Tile[,] _board; //Array de Tiles
+    private Tile[,] _board; //Array de Tiles
+    public int PendingTiles { get; protected set; }
 
     [SerializeField] private Tile _tilePrefab;
     private LevelManager _levelManager;
@@ -19,7 +18,8 @@ class Board : MonoBehaviour
     public void Init(LevelManager levelManager, TextAsset map)
     {
         _levelManager = levelManager;
-        
+        PendingTiles = 0;
+
         string[] layers = map.text.Split('[');//Se separa el contenido del mapa por layers
 
         //Lectura de los tipos de Tile
@@ -30,10 +30,10 @@ class Board : MonoBehaviour
         string[] inversedMatrix = new string[N];
 
 
-        for (int i = 0; i < N; i++)      
+        for (int i = 0; i < N; i++)
             inversedMatrix[i] = layerNumberTiles[OFFSET + i];
 
-        
+
         string[] realMatrix = new string[N];
 
         //Invertimos la matriz
@@ -61,7 +61,7 @@ class Board : MonoBehaviour
 
 
 
-        _board = new Tile[realMatrix[0].Length-1,N];
+        _board = new Tile[realMatrix[0].Length - 1, N];
 
 
         for (int i = 0; i < N; i++)
@@ -75,7 +75,7 @@ class Board : MonoBehaviour
             matHealthAux = realHealthMatrix[i].Split(',', '.');
 
             //Rellenamos la matriz
-            for (int k = 0; k < matAux.Length-1; k++)
+            for (int k = 0; k < matAux.Length - 1; k++)
             {
                 int tileType = int.Parse(matAux[k]);
 
@@ -84,11 +84,36 @@ class Board : MonoBehaviour
                 {
                     uint tileHealth = uint.Parse(matHealthAux[k]);
 
-                    _board[k,i] = Instantiate(_tilePrefab,transform.position + new Vector3(k, i, 0), Quaternion.identity, transform);
-                    _board[k,i].Init(_levelManager, tileHealth, k, i);
+                    _board[k, i] = Instantiate(_tilePrefab, transform.position + new Vector3(k, i, 0), Quaternion.identity, transform);
+                    _board[k, i].Init(_levelManager, tileHealth, k, i);
+
+                    PendingTiles++;
                 }
             }
         }
+    }
+
+
+    public void OnTileDestroyed(Tile tile)
+    {
+        _board[tile.Y, tile.X] = null;
+        Destroy(tile.gameObject);
+
+        PendingTiles--;
+
+        if (PendingTiles == 0)
+            _levelManager.LevelEnd();
+    }
+
+    /// <summary>
+    /// Es llamado cuando ha acabado una tirada
+    /// Baja todos los ladrillos
+    /// </summary>
+    public void OnRoundEnd()
+    {
+        foreach (Tile tile in _board)
+            if (tile != null)
+                tile.SetPosition(tile.X, tile.Y - 1);
     }
 }
 

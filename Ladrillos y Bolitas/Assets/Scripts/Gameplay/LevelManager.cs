@@ -19,7 +19,6 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private AimController aimController;
 
     [Header("Test Attributes")]
-    [SerializeField] private Vector2 ballVelocity;
     [SerializeField] private TextAsset map;//Mapa con la informacion del juego
 
     public uint CurrentNumBalls { get; set; }
@@ -27,19 +26,17 @@ public class LevelManager : MonoBehaviour
     public delegate void OnRoundStart();
     public OnRoundStart OnRoundStartCallback;
 
-    private float sinkYPos; //Coordenada y del sumidero
-
     /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
     /// </summary>
     private void Start()
     {
-        sinkYPos = ballSpawner.transform.position.y;
         ballSpawner.Init(ballPrefab, ballSpawnTickRate);
-        ballSink.Init(this,30);
-        deathZone.Init(this, ballToSinkTime, ballSink.OnBallArrived);
+        CurrentNumBalls = 30;
+        ballSink.Init(this, CurrentNumBalls);
+        deathZone.Init(this,ballSink, ballToSinkTime);
         board.Init(this, map);
-        aimController.Init(ballSpawner);
+        aimController.Init(this, ballSpawner);
     }
 
     /// <summary>
@@ -50,42 +47,26 @@ public class LevelManager : MonoBehaviour
     {
         if (OnRoundStartCallback != null)
             OnRoundStartCallback.Invoke();
-
     }
 
-    /// <summary>
-    /// Es llamado cuando la primera pelota ha llegado a la deathZone
-    /// Muestra el BallSink y le informa de que ha llegado una pelota
-    /// Devuelve la posición del sumidero
-    /// </summary>
-    /// <param name="ball"></param>
-    /// <returns></returns>
-    public Vector3 FirstBallDeath(Ball ball)
+
+    public void TileDestroyed(Tile tile)
     {
-        Vector3 ballSinkPos = new Vector3(ball.transform.position.x, sinkYPos, ball.transform.position.z);
-        ballSink.Show(ballSinkPos);
-        ballSink.OnBallArrived(ball);
-        return ballSinkPos;
+        board.OnTileDestroyed(tile);
     }
 
     /// <summary>
-    /// Establece la posición del ballSpawner a a la del ballSink
+    /// Establece la posición del ballSpawner a a la del ballSink e informa al tablero para que baje
     /// Es llamado cuando todas las pelotas han caido
     /// </summary>
     public void RoundEnd()
     {
         ballSpawner.SetPosition(ballSink.transform.position);
+        board.OnRoundEnd();
     }
 
-    //TODO: TEST
-    private void Update()
+    public void LevelEnd()
     {
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            RoundStart();
-            ballSpawner.SpawnBalls(30, ballVelocity);
-        }
-
+        Debug.Log("has ganado:" + (board.PendingTiles == 0));
     }
-
 }

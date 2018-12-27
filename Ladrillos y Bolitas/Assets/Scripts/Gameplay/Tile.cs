@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 public class Tile : MonoBehaviour {
@@ -31,12 +29,21 @@ public class Tile : MonoBehaviour {
         _levelManager = levelManager;
     }
 
+    public void SetPosition(int x, int y)
+    {
+        X = x;
+        Y = y;
+
+        transform.localPosition = new Vector3(X, Y, 0);
+        if (Y == 0)
+            _levelManager.LevelEnd();
+
+    }
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Health--;
         if (health == 0)
-            Destroy(gameObject);
-
+            _levelManager.TileDestroyed(this);
     }
 
 }
