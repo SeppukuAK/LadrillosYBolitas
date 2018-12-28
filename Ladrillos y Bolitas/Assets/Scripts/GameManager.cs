@@ -54,7 +54,7 @@ public class GameManager : MonoBehaviour {
 
     private void Update()
     {
-        Debug.Log("lapis:" + Coins);
+      //  Debug.Log("lapis:" + Coins);
 
         if (Input.GetKeyDown(KeyCode.A))
             SaveData();

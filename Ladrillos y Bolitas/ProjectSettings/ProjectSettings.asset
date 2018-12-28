@@ -712,9 +712,9 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 
-  projectName: 
-  organizationId: 
+  cloudProjectId: 6ddd18a1-0693-49a6-a372-47b4da1132d0
+  projectName: Ladrillos y Bolitas
+  organizationId: idra02
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0
