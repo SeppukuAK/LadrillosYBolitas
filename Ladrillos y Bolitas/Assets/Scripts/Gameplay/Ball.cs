@@ -3,7 +3,7 @@ using System.Collections;
 
 /// <summary>
 /// Controla el comportamiento de la pelota
-/// Tiene métodos para asignarle una velocidad y para moverle a un punto
+/// Tiene métodos para contrar su velocidad y para moverle a un punto
 /// </summary>
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
@@ -37,14 +37,6 @@ public class Ball : MonoBehaviour
     public void Stop()
     {
         rb.velocity = Vector2.zero;
-    }
-
-    /// <summary>
-    /// Establece la coordenada Y de la pelota
-    /// </summary>
-    public void SetYPos(float y)
-    {
-        transform.position = new Vector3(transform.position.x, y, transform.position.z);
     }
 
     /// <summary>

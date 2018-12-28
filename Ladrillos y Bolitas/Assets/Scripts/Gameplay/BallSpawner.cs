@@ -22,15 +22,6 @@ public class BallSpawner : MonoBehaviour
     }
 
     /// <summary>
-    /// Establece su posición
-    /// </summary>
-    /// <param name="pos"></param>
-    public void SetPosition(Vector3 pos)
-    {
-        transform.position = pos;
-    }
-
-    /// <summary>
     /// Inicia la corrutina que instancia numBalls pelotas con ballVelocity de velocidad
     /// </summary>
     /// <param name="numBalls"></param>

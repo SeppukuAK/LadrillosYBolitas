@@ -3,23 +3,25 @@ using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-class Board : MonoBehaviour
+public class Board : MonoBehaviour
 {
     private Tile[,] _board; //Array de Tiles
     public int PendingTiles { get; protected set; }
 
     [SerializeField] private Tile _tilePrefab;
+
     private LevelManager _levelManager;
     const int OFFSET = 3;
 
     /// <summary>
     /// Fichero que queremos leer
     /// </summary>
-    public void Init(LevelManager levelManager, TextAsset map)
+    public void Init(LevelManager levelManager, int mapLevel)
     {
         _levelManager = levelManager;
         PendingTiles = 0;
 
+        TextAsset map = GameManager.Instance.MapData[mapLevel];
         string[] layers = map.text.Split('[');//Se separa el contenido del mapa por layers
 
         //Lectura de los tipos de Tile
@@ -59,8 +61,6 @@ class Board : MonoBehaviour
         for (int i = 0; i < N; i++)
             realHealthMatrix[i] = inversedHealthMatrix[N - 1 - i];
 
-
-
         _board = new Tile[realMatrix[0].Length - 1, N];
 
 
@@ -85,16 +85,18 @@ class Board : MonoBehaviour
                     uint tileHealth = uint.Parse(matHealthAux[k]);
 
                     _board[k, i] = Instantiate(_tilePrefab, transform.position + new Vector3(k, i, 0), Quaternion.identity, transform);
-                    _board[k, i].Init(_levelManager, tileHealth, k, i);
+                    _board[k, i].Init(_levelManager,this, tileHealth, k, i);
 
                     PendingTiles++;
                 }
             }
         }
+
+        levelManager.OnRoundEndCallback += OnRoundEnd;
     }
 
 
-    public void OnTileDestroyed(Tile tile)
+    public void TileDestroyed(Tile tile)
     {
         _board[tile.Y, tile.X] = null;
         Destroy(tile.gameObject);

@@ -7,7 +7,7 @@ public class Tile : MonoBehaviour {
     public int Y { get; set; }
 
     LevelManager _levelManager;
-
+    Board _board;
     public Text HealthText;
 
     private uint health;
@@ -21,12 +21,13 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    public void Init(LevelManager levelManager, uint pendingTouches, int x, int y)
+    public void Init(LevelManager levelManager, Board board, uint pendingTouches, int x, int y)
     {
         X = x;
         Y = y;
         Health = pendingTouches;
         _levelManager = levelManager;
+        _board = board;
     }
 
     public void SetPosition(int x, int y)
@@ -43,7 +44,7 @@ public class Tile : MonoBehaviour {
     {
         Health--;
         if (health == 0)
-            _levelManager.TileDestroyed(this);
+            _board.TileDestroyed(this);
     }
 
 }

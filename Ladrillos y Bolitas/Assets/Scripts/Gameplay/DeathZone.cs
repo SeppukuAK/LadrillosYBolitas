@@ -6,9 +6,13 @@
 [RequireComponent(typeof(BoxCollider2D))]
 public class DeathZone : MonoBehaviour
 {
-    //References
-    private LevelManager _levelManager;
+    #region References
+
     private BallSink _ballSink;
+
+    #endregion References
+
+    #region Attributes
 
     /// <summary>
     /// Tiempo que tarda la pelota en llegar al Sink
@@ -16,10 +20,11 @@ public class DeathZone : MonoBehaviour
     private float _ballToSinkTime;
 
     /// <summary>
-    /// Guarda la posición del sumidero
-    /// Zero si no ha caido todavia ninguna pelota en esta ronda
+    /// Guarda si ha colisionado la primera pelota con la DeathZOne
     /// </summary>
-    private Vector3 ballSinkPos;
+    private bool firstBallCollided;
+
+    #endregion Attributes
 
     /// <summary>
     /// Inicializa el deathZone desde levelManager. 
@@ -29,9 +34,8 @@ public class DeathZone : MonoBehaviour
     /// <param name="levelManager"></param>
     /// <param name="ballToSinkTime"></param>
     /// <param name="onBallSinkArrivedCallback"></param>
-    public void Init(LevelManager levelManager, BallSink ballSink, float ballToSinkTime)
+    public void Init(LevelManager levelManager,BallSink ballSink, float ballToSinkTime)
     {
-        _levelManager = levelManager;
         _ballSink = ballSink;
         _ballToSinkTime = ballToSinkTime;
         levelManager.OnRoundStartCallback += OnRoundStart;
@@ -43,7 +47,7 @@ public class DeathZone : MonoBehaviour
     /// </summary>
     public void OnRoundStart()
     {
-        ballSinkPos = Vector3.zero;
+        firstBallCollided = false;
     }
 
     /// <summary>
@@ -56,10 +60,11 @@ public class DeathZone : MonoBehaviour
         if (ball)
         {
             //Ha chocado la primera pelota
-            if (ballSinkPos == Vector3.zero)
-            {   
-                ballSinkPos = new Vector3(ball.transform.position.x, _ballSink.SinkYPos, ball.transform.position.z);
-                _ballSink.Show(ballSinkPos);
+            if (!firstBallCollided)
+            {
+                //Se muestra el sink
+                firstBallCollided = true;
+                _ballSink.Show(ball.transform.position.x);
                 _ballSink.OnBallArrived(ball);
             }
 
@@ -68,8 +73,7 @@ public class DeathZone : MonoBehaviour
             {
                 //Para la pelota, fuerza su posición en Y y llama a la corrutina de movimiento hacia el sink
                 ball.Stop();
-                ball.SetYPos(_ballSink.SinkYPos);
-                ball.MoveTo(ballSinkPos, _ballToSinkTime, _ballSink.OnBallArrived);
+                ball.MoveTo(_ballSink.transform.position, _ballToSinkTime, _ballSink.OnBallArrived);
             }
         }
     }

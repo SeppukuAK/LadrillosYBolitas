@@ -8,29 +8,30 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BallSink : MonoBehaviour
 {
+    #region References
     //Own References
     private Text labelText;
     private SpriteRenderer ballSprite;
 
     //Other References
     private LevelManager _levelManager;
+    #endregion References
+
+    #region Attributes
 
     /// <summary>
     /// Numero actual de pelotas que han llegado al ballsink durante esta ronda
     /// Modifica el texto cuando es actualizado su valor
     /// </summary>
-    private uint CurrentNumBalls { get { return currentNumBalls; } set { currentNumBalls = value; labelText.text = "x" + currentNumBalls; } }
-    private uint currentNumBalls;
+    private uint currentNumBalls { get { return _currentNumBalls; } set { _currentNumBalls = value; labelText.text = "x" + _currentNumBalls; } }
+    private uint _currentNumBalls;
 
     /// <summary>
     /// Pelotas que tienen que llegar al BallSink durante esta ronda
     /// </summary>
     private uint totalNumBalls;
 
-    /// <summary>
-    /// Coordenada Y en la que se debe forzar la posición del sumidero y de las pelotas
-    /// </summary>
-    public float SinkYPos;
+    #endregion Attributes
 
     /// <summary>
     /// Obtiene referencias
@@ -39,11 +40,6 @@ public class BallSink : MonoBehaviour
     {
         ballSprite = GetComponent<SpriteRenderer>();
         labelText = GetComponentInChildren<Text>();
-    }
-
-    private void Start()
-    {
-        SinkYPos = transform.position.y;
     }
 
     /// <summary>
@@ -56,7 +52,7 @@ public class BallSink : MonoBehaviour
     public void Init(LevelManager levelManager, uint numBalls)
     {
         _levelManager = levelManager;
-        CurrentNumBalls = numBalls;
+        currentNumBalls = numBalls;
         levelManager.OnRoundStartCallback += OnRoundStart;
     }
 
@@ -65,7 +61,7 @@ public class BallSink : MonoBehaviour
     /// </summary>
     public void OnRoundStart()
     {
-        CurrentNumBalls = 0;
+        currentNumBalls = 0;
         totalNumBalls = _levelManager.CurrentNumBalls;
         Hide();
     }
@@ -83,9 +79,9 @@ public class BallSink : MonoBehaviour
     /// Lo muestra en una posición, activando el sprite y el texto
     /// </summary>
     /// <param name="pos"></param>
-    public void Show(Vector3 pos)
+    public void Show(float x)
     {
-        transform.position = pos;
+        transform.position = new Vector3(x,transform.position.y,transform.position.z);
 
         labelText.enabled = true;
         ballSprite.enabled = true;
@@ -97,9 +93,9 @@ public class BallSink : MonoBehaviour
     public void OnBallArrived(Ball ball)
     {
         Destroy(ball.gameObject);
-        CurrentNumBalls++;
+        currentNumBalls++;
 
-        if (CurrentNumBalls == totalNumBalls)
+        if (currentNumBalls == totalNumBalls)
             _levelManager.RoundEnd();
     }
 }

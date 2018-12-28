@@ -18,24 +18,26 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Board board;
     [SerializeField] private AimController aimController;
 
-    [Header("Test Attributes")]
-    [SerializeField] private TextAsset map;//Mapa con la informacion del juego
-
     public uint CurrentNumBalls { get; set; }
 
     public delegate void OnRoundStart();
     public OnRoundStart OnRoundStartCallback;
+
+    public delegate void OnRoundEnd();
+    public OnRoundStart OnRoundEndCallback;
 
     /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
     /// </summary>
     private void Start()
     {
+        string[] levelData = GameManager.Instance.GameData.text.Split('\n');
+        CurrentNumBalls = uint.Parse(levelData[GameManager.Instance.MapLevel].Split(' ', ',')[1]);
+
         ballSpawner.Init(ballPrefab, ballSpawnTickRate);
-        CurrentNumBalls = 30;
         ballSink.Init(this, CurrentNumBalls);
         deathZone.Init(this,ballSink, ballToSinkTime);
-        board.Init(this, map);
+        board.Init(this, GameManager.Instance.MapLevel);
         aimController.Init(this, ballSpawner);
     }
 
@@ -49,20 +51,16 @@ public class LevelManager : MonoBehaviour
             OnRoundStartCallback.Invoke();
     }
 
-
-    public void TileDestroyed(Tile tile)
-    {
-        board.OnTileDestroyed(tile);
-    }
-
     /// <summary>
-    /// Establece la posición del ballSpawner a a la del ballSink e informa al tablero para que baje
+    /// Establece la posición del ballSpawner a a la del ballSink e informa a todos los subscritos que ha acabado la ronda
     /// Es llamado cuando todas las pelotas han caido
     /// </summary>
     public void RoundEnd()
     {
-        ballSpawner.SetPosition(ballSink.transform.position);
-        board.OnRoundEnd();
+        ballSpawner.transform.position = ballSink.transform.position;
+
+        if (OnRoundEndCallback != null)
+            OnRoundEndCallback.Invoke();
     }
 
     public void LevelEnd()

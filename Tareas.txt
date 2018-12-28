@@ -19,7 +19,6 @@ Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtua
 proporciona 20, el tercero 30 y así sucesivamente. Al ir consiguiendo puntos va creciendo
 una barra de desplazamiento y el número de estrellas conseguidas.
 
--Revisar relación de aspecto
 -Funciona en orientacion vertical (retrato)
 
 -Todos los bloques solidos: triangulos
@@ -31,6 +30,7 @@ una barra de desplazamiento y el número de estrellas conseguidas.
 -UnityAds. Para monetizar el juego
 -Ver anuncios proporciona gemas. (opcional pero obligatorio)
 -Ser amigable en la salida de la aplicación
+-Revisar los physics material
 
 Optativo:
 
@@ -42,3 +42,6 @@ TODO: Duda: Utilizar las opciones del placeholder???
 Entrega: mirar
 
 ---------ENUNCIADO----------
+
+Cosas hechas:
+-Revisar relación de aspecto
