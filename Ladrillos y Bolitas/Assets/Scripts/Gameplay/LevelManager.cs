@@ -37,7 +37,7 @@ public class LevelManager : MonoBehaviour
         ballSpawner.Init(ballPrefab, ballSpawnTickRate);
         ballSink.Init(this, CurrentNumBalls);
         deathZone.Init(this,ballSink, ballToSinkTime);
-        board.Init(this, GameManager.Instance.MapLevel);
+        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel]);
         aimController.Init(this, ballSpawner);
     }
 

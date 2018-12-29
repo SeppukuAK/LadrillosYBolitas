@@ -21,11 +21,11 @@ public class Tile : MonoBehaviour {
         }
     }
 
-    public void Init(LevelManager levelManager, Board board, uint pendingTouches, int x, int y)
+    public void Init(LevelManager levelManager, Board board, int pendingTouches, int x, int y)
     {
         X = x;
         Y = y;
-        Health = pendingTouches;
+        Health = (uint)pendingTouches;
         _levelManager = levelManager;
         _board = board;
     }
