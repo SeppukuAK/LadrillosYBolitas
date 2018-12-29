@@ -16,7 +16,7 @@ public class AdManager : MonoBehaviour {
         switch (result)
         {
             case ShowResult.Finished:
-                Debug.Log("Has ganado 5 gemas");
+                GameManager.Instance.Coins += 5; //Incrementamos el número de monedas
                 break;
             case ShowResult.Skipped:
                 Debug.Log("No se ha visto el video entero");

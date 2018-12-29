@@ -1181,7 +1181,6 @@ GameObject:
   - component: {fileID: 195418017}
   - component: {fileID: 195418020}
   - component: {fileID: 195418019}
-  - component: {fileID: 195418018}
   m_Layer: 5
   m_Name: Text
   m_TagString: Untagged
@@ -1207,17 +1206,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &195418018
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 195418016}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c369da6770d4f6648ab441a836c4d289, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!114 &195418019
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2684,6 +2672,7 @@ GameObject:
   m_Component:
   - component: {fileID: 500940575}
   - component: {fileID: 500940574}
+  - component: {fileID: 500940576}
   m_Layer: 0
   m_Name: LevelManager
   m_TagString: Untagged
@@ -2724,6 +2713,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &500940576
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 500940573}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c369da6770d4f6648ab441a836c4d289, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &504355162
 GameObject:
   m_ObjectHideFlags: 0
@@ -10576,7 +10576,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 195418018}
+      - m_Target: {fileID: 500940576}
         m_MethodName: ShowAd
         m_Mode: 1
         m_Arguments:
