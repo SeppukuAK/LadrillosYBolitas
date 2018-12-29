@@ -17,10 +17,8 @@ proporciona 20, el tercero 30 y así sucesivamente. Al ir consiguiendo puntos va
 una barra de desplazamiento y el número de estrellas conseguidas.
 
 
--Todos los bloques solidos: triangulos
 -Un tipo de bloque especial.
--Un tipo de potenciador.
--Info de ello en el documento
+-Un tipo de potenciador.(Info de ello en el documento)
 -Sprites tienen que ser 60x60
 
 -UnityAds. Para monetizar el juego Ver anuncios proporciona gemas. 
@@ -36,9 +34,3 @@ TODO: Duda: Utilizar las opciones del placeholder???
 Entrega: mirar
 
 ---------ENUNCIADO----------
-
-Cosas hechas:
--Revisar relación de aspecto
--Revisar los physics material
--Mapas en ficheros de texto. Primer indica tipo de bloque. Segundo el numero de golpes
--Funciona en orientacion vertical (retrato)
