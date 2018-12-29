@@ -1590,7 +1590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f247a11abbaf25e43b68c94a41d5aaa6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BallVelocity: 10
+  BallVelocity: 8
 --- !u!4 &268528324
 Transform:
   m_ObjectHideFlags: 0

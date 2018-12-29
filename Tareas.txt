@@ -10,16 +10,12 @@ Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtua
 -Se muestra la lista de niveles disponibles, bloqueados, puntuacion, etc.
 -Moneda virtual con la que comprar power-ups durante la partida (antes de tirar) en los botones inferiores
 
-
 -11 bloques de ancho y 12 de alto visibles (siempre hay uno por debajo(justo donde el disparo) y otro por arriba)
-
--Mapas en ficheros de texto. Primer indica tipo de bloque. Segundo el numero de golpes
 
 -Puntuacion: El primer bloque sólido golpeado en un disparo proporciona 10 puntos. El segundo
 proporciona 20, el tercero 30 y así sucesivamente. Al ir consiguiendo puntos va creciendo
 una barra de desplazamiento y el número de estrellas conseguidas.
 
--Funciona en orientacion vertical (retrato)
 
 -Todos los bloques solidos: triangulos
 -Un tipo de bloque especial.
@@ -27,10 +23,8 @@ una barra de desplazamiento y el número de estrellas conseguidas.
 -Info de ello en el documento
 -Sprites tienen que ser 60x60
 
--UnityAds. Para monetizar el juego
--Ver anuncios proporciona gemas. (opcional pero obligatorio)
+-UnityAds. Para monetizar el juego Ver anuncios proporciona gemas. 
 -Ser amigable en la salida de la aplicación
--Revisar los physics material
 
 Optativo:
 
@@ -45,3 +39,6 @@ Entrega: mirar
 
 Cosas hechas:
 -Revisar relación de aspecto
+-Revisar los physics material
+-Mapas en ficheros de texto. Primer indica tipo de bloque. Segundo el numero de golpes
+-Funciona en orientacion vertical (retrato)
