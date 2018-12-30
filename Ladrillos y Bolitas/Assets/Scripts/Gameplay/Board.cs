@@ -23,6 +23,8 @@ public class Board : MonoBehaviour
     private int width;
     private int height;
 
+    private int tilesDestroyedThisRound;
+
     /// <summary>
     /// Fichero que queremos leer
     /// </summary>
@@ -75,6 +77,7 @@ public class Board : MonoBehaviour
             }
         }
 
+        levelManager.OnRoundStartCallback += OnRoundStart;
         levelManager.OnRoundEndCallback += OnRoundEnd;
     }
 
@@ -105,8 +108,13 @@ public class Board : MonoBehaviour
         _board[tile.Y, tile.X] = null;
         PendingTiles--;
 
-        if (PendingTiles == 0)
-            _levelManager.LevelEnd();
+        tilesDestroyedThisRound++;
+        _levelManager.Points += tilesDestroyedThisRound * 10;   //TODO: Parametrico
+    }
+
+    public void OnRoundStart()
+    {
+        tilesDestroyedThisRound = 0;
     }
 
     /// <summary>
@@ -115,43 +123,49 @@ public class Board : MonoBehaviour
     /// </summary>
     public void OnRoundEnd()
     {
-        //Bajamos todos los tiles
-        for (int i = 1; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                //Si hay tile
-                if (_board[i, j] != null)
-                {
-                    Tile tile = _board[i, j];
+        if (PendingTiles == 0)
+            _levelManager.LevelEnd();
 
-                    //Si es un tipo de tile que se puede mover
-                    if (tile.CanFall())
+        else
+        {
+            //Bajamos todos los tiles
+            for (int i = 1; i < height; i++)
+            {
+                for (int j = 0; j < width; j++)
+                {
+                    //Si hay tile
+                    if (_board[i, j] != null)
                     {
-                        //Comprobamos si no hay tile abajo para moverse
-                        if (_board[i - 1, j] == null)
+                        Tile tile = _board[i, j];
+
+                        //Si es un tipo de tile que se puede mover
+                        if (tile.CanFall())
                         {
-                            _board[i, j] = null;
-                            _board[i - 1, j] = tile;
-                            tile.SetPosition(new Vector2Int(j, i - 1));
+                            //Comprobamos si no hay tile abajo para moverse
+                            if (_board[i - 1, j] == null)
+                            {
+                                _board[i, j] = null;
+                                _board[i - 1, j] = tile;
+                                tile.SetPosition(new Vector2Int(j, i - 1));
+                            }
                         }
                     }
                 }
             }
-        }
 
-        //Comprobación si se ha perdido
-        int k = 0;
-        bool fail = false;
-        while (!fail && k < width)
-        {
-            if (_board[0, k] != null)
-                fail = true;
-            k++;
-        }
+            //Comprobación si se ha perdido
+            int k = 0;
+            bool fail = false;
+            while (!fail && k < width)
+            {
+                if (_board[0, k] != null)
+                    fail = true;
+                k++;
+            }
 
-        if (fail)
-            _levelManager.LevelEnd();
+            if (fail)
+                _levelManager.LevelEnd();
+        }
 
     }
 }

@@ -3,18 +3,11 @@
 Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtual
 
 -Un ladrillos apunto de llegar abajo del todo: Se avisa al usuario con un marco rojo
--Un ladrillo llega abajo. Se debe volver a repetir el nivel
--Cuando se eliminan todos los bloques, se consigue un numero de estrellas (entre 1 y 3) dependiendo de la puntuación y se pasa al siguiente nivel
 
 -Se mantiene el progreso entre sesiones. Dificil de romper y acceder
 -Se muestra la lista de niveles disponibles, bloqueados, puntuacion, etc.
 -Moneda virtual con la que comprar power-ups durante la partida (antes de tirar) en los botones inferiores
 
--Puntuacion: El primer bloque sólido golpeado en un disparo proporciona 10 puntos. El segundo
-proporciona 20, el tercero 30 y así sucesivamente. Al ir consiguiendo puntos va creciendo
-una barra de desplazamiento y el número de estrellas conseguidas.
-
--Un tipo de bloque especial.
 -Un tipo de potenciador.(Info de ello en el documento)
 -Sprites tienen que ser 60x60
 
@@ -29,6 +22,8 @@ Optativo:
 Cosas que se me ocurren:
 TODO: Duda: Utilizar las opciones del placeholder???
 -Que no se pueda disprar hacia abajo
+-Mas bloques especiales
+-panel de acabar partida: rupias
 
 Entrega: mirar
 

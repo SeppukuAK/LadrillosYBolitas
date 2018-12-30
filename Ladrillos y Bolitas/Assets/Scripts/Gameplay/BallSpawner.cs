@@ -8,14 +8,14 @@ using UnityEngine;
 public class BallSpawner : MonoBehaviour
 {
     private Ball _ballPrefab;
-    private uint _ballSpawnTickRate;
+    private int _ballSpawnTickRate;
 
     /// <summary>
     /// Inicializa el BallSpawner.
     /// Le da el Prefab de la bola y cada cuantos ticks es spawneada
     /// </summary>
     /// <param name="ball"></param>
-    public void Init(Ball ballPrefab, uint ballSpawnTickRate)
+    public void Init(Ball ballPrefab, int ballSpawnTickRate)
     {
         _ballPrefab = ballPrefab;
         _ballSpawnTickRate = ballSpawnTickRate;
@@ -26,7 +26,7 @@ public class BallSpawner : MonoBehaviour
     /// </summary>
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
-    public void SpawnBalls(uint numBalls, Vector2 ballVelocity)
+    public void SpawnBalls(int numBalls, Vector2 ballVelocity)
     {
         StartCoroutine(SpawnBallsCoroutine(numBalls, ballVelocity));
     }
@@ -37,7 +37,7 @@ public class BallSpawner : MonoBehaviour
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
     /// <returns></returns>
-    private IEnumerator SpawnBallsCoroutine(uint numBalls, Vector2 ballVelocity)
+    private IEnumerator SpawnBallsCoroutine(int numBalls, Vector2 ballVelocity)
     {
         for (int i = 0; i < numBalls; i++)
         {

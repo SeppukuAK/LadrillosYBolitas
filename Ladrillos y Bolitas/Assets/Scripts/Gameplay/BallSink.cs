@@ -23,13 +23,13 @@ public class BallSink : MonoBehaviour
     /// Numero actual de pelotas que han llegado al ballsink durante esta ronda
     /// Modifica el texto cuando es actualizado su valor
     /// </summary>
-    private uint currentNumBalls { get { return _currentNumBalls; } set { _currentNumBalls = value; labelText.text = "x" + _currentNumBalls; } }
-    private uint _currentNumBalls;
+    private int currentNumBalls { get { return _currentNumBalls; } set { _currentNumBalls = value; labelText.text = "x" + _currentNumBalls; } }
+    private int _currentNumBalls;
 
     /// <summary>
     /// Pelotas que tienen que llegar al BallSink durante esta ronda
     /// </summary>
-    private uint totalNumBalls;
+    private int totalNumBalls;
 
     #endregion Attributes
 
