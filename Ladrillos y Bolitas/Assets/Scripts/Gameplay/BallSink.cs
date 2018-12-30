@@ -49,11 +49,11 @@ public class BallSink : MonoBehaviour
     /// </summary>
     /// <param name="levelManager"></param>
     /// <param name="numBalls"></param>
-    public void Init(LevelManager levelManager, uint numBalls)
+    public void Init(LevelManager levelManager)
     {
         _levelManager = levelManager;
-        currentNumBalls = numBalls;
-        levelManager.OnRoundStartCallback += OnRoundStart;
+        currentNumBalls = _levelManager.CurrentNumBalls;
+        _levelManager.OnRoundStartCallback += OnRoundStart;
     }
 
     /// <summary>

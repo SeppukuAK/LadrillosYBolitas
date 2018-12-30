@@ -9,6 +9,7 @@ public class LevelManager : MonoBehaviour
     [Header("Game Attributes")]
     [SerializeField] private uint ballSpawnTickRate;
     [SerializeField] private float ballToSinkTime;
+    [SerializeField] private float ballVelocity;
 
     [Header("References")]
     [SerializeField] private Ball ballPrefab;
@@ -31,14 +32,13 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        string[] levelData = GameManager.Instance.GameData.text.Split('\n');
-        CurrentNumBalls = uint.Parse(levelData[GameManager.Instance.MapLevel].Split(' ', ',')[1]);
+        CurrentNumBalls = uint.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.MapLevel].Split(' ', ',')[1]);
 
+        aimController.Init(this, ballSpawner, ballVelocity);
         ballSpawner.Init(ballPrefab, ballSpawnTickRate);
-        ballSink.Init(this, CurrentNumBalls);
-        deathZone.Init(this,ballSink, ballToSinkTime);
+        deathZone.Init(this, ballSink, ballToSinkTime);
+        ballSink.Init(this);
         board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel]);
-        aimController.Init(this, ballSpawner);
     }
 
     /// <summary>

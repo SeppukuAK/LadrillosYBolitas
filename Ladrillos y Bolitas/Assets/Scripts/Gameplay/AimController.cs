@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Controlador del input del usuario.
+/// Detecta cuando se pulsa en la pantalla para disparar las bolas
+/// Renderiza una linea auxiliar de apuntado
+/// </summary>
 public class AimController : MonoBehaviour
 {
-    public float BallVelocity;
-
     //Own Components
     private LineRenderer lineRenderer;
 
@@ -12,7 +15,8 @@ public class AimController : MonoBehaviour
     private BallSpawner _ballSpawner;
 
     private bool canShoot;
-    
+    private float _ballVelocity;
+
     /// <summary>
     /// Obtiene referencias
     /// </summary>
@@ -21,10 +25,12 @@ public class AimController : MonoBehaviour
         lineRenderer = GetComponent<LineRenderer>();
     }
 
-    public void Init(LevelManager levelManager, BallSpawner ballSpawner)
+    public void Init(LevelManager levelManager, BallSpawner ballSpawner, float ballVelocity)
     {
         _levelManager = levelManager;
         _ballSpawner = ballSpawner;
+        _ballVelocity = ballVelocity;
+
         lineRenderer.positionCount = 0;
         levelManager.OnRoundStartCallback += OnRoundStart;
         levelManager.OnRoundEndCallback += OnRoundEnd;
@@ -63,7 +69,7 @@ public class AimController : MonoBehaviour
                 mousePos.z = 0;
 
                 Vector2 dir = (mousePos - _ballSpawner.transform.position).normalized;
-                _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, BallVelocity * dir);
+                _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, _ballVelocity * dir);
             }
 
             //Solo si hay un dedo hago cosas
@@ -114,7 +120,7 @@ public class AimController : MonoBehaviour
                     mousePos.z = 0;
 
                     Vector2 dir = (mousePos - _ballSpawner.transform.position).normalized;
-                    _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, BallVelocity * dir);
+                    _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, _ballVelocity * dir);
 
                 }
             }
