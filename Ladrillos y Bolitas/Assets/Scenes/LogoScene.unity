@@ -160,14 +160,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.3480331, g: 0.9339623, b: 0.48000655, a: 1}
+  m_Color: {r: 0, g: 0.83921576, b: 0.46274513, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
-  m_Sprite: {fileID: 21300000, guid: f743ae65363a58b4bb63d471b4978b1a, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4093d13921c536f43bbb89cf23052aaf, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -685,7 +685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.23137257, g: 0.6, b: 0.45882356, a: 1}
+  m_Color: {r: 0, g: 0.83921576, b: 0.46274513, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -693,7 +693,7 @@ MonoBehaviour:
     m_TypeName: UnityEngine.UI.MaskableGraphic+CullStateChangedEvent, UnityEngine.UI,
       Version=1.0.0.0, Culture=neutral, PublicKeyToken=null
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 92e081a191b80d54483bb6a9ccc8c911, type: 3}
+    m_Font: {fileID: 12800000, guid: e932c97b2fbf0254b93a32369f558ca5, type: 3}
     m_FontSize: 14
     m_FontStyle: 0
     m_BestFit: 1
@@ -705,11 +705,11 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'BRICKS
+  m_Text: 'Ladrillos
 
-    N
+    y
 
-    BALLS'
+    bolas'
 --- !u!222 &2010580141
 CanvasRenderer:
   m_ObjectHideFlags: 0
