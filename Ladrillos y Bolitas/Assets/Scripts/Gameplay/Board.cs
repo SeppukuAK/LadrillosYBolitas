@@ -6,6 +6,9 @@ using System;
 /// </summary>
 public class Board : MonoBehaviour
 {
+    public const int BOARDHEIGHT = 14;
+    public const int BOARDWIDTH = 11;
+
     public const int VISIBLEHEIGHT = 13;
     /// <summary>
     /// Array con los prefabs de los diferentes tiles
@@ -114,6 +117,7 @@ public class Board : MonoBehaviour
 
     public void OnRoundStart()
     {
+        _levelManager.Alert = false;
         tilesDestroyedThisRound = 0;
     }
 
@@ -155,18 +159,34 @@ public class Board : MonoBehaviour
 
             //Comprobación si se ha perdido
             int k = 0;
-            bool fail = false;
-            while (!fail && k < width)
+            while (k < width)
             {
                 if (_board[0, k] != null)
-                    fail = true;
+                {
+                    k = width;
+                    _levelManager.LevelEnd();
+                }
                 k++;
             }
-
-            if (fail)
-                _levelManager.LevelEnd();
+            _levelManager.Alert = DetectAlert();
         }
 
+    }
+
+    public bool DetectAlert()
+    {
+        int k = 0;
+        bool alert = false;
+
+        while (!alert && k < width)
+        {
+            if (_board[1, k] != null)
+                alert = true;
+
+            k++;
+        }
+
+        return alert;
     }
 }
 

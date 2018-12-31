@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using UnityEngine;
+using System.Collections.Generic;
 
 /// <summary>
 /// Spawner de la pelota.
@@ -9,6 +10,8 @@ public class BallSpawner : MonoBehaviour
 {
     private Ball _ballPrefab;
     private int _ballSpawnTickRate;
+
+    private List<Ball> balls;
 
     /// <summary>
     /// Inicializa el BallSpawner.

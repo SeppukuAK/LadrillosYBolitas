@@ -24,6 +24,10 @@ TODO: Duda: Utilizar las opciones del placeholder???
 -Que no se pueda disprar hacia abajo
 -Mas bloques especiales
 -panel de acabar partida: rupias
+-Boton de vuelta a casa
+-Boton de acelerar velocidad
+-NO DETECTAR EL INPUT AL TOCAR EL CANVAS
+
 
 Entrega: mirar
 

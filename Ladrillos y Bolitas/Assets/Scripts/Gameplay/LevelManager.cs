@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 /// <summary>
 /// Manager de un nivel de juego
@@ -7,10 +8,20 @@ using UnityEngine.UI;
 /// </summary>
 public class LevelManager : MonoBehaviour
 {
+    #region Callbacks
+    public delegate void OnRoundStart();
+    public OnRoundStart OnRoundStartCallback;
+
+    public delegate void OnRoundEnd();
+    public OnRoundStart OnRoundEndCallback;
+    #endregion Callbacks
+
+    #region Inspector Attributes
     [Header("Game Attributes")]
     [SerializeField] private int ballSpawnTickRate;
     [SerializeField] private float ballToSinkTime;
     [SerializeField] private float ballVelocity;
+    [SerializeField] private float alertDuration;
 
     [Header("Gameplay References")]
     [SerializeField] private Ball ballPrefab;
@@ -26,6 +37,10 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Text pointsText;
     [SerializeField] private Image[] starsImages;
     [SerializeField] private GameOverUI gameOverUIPrefab;
+    [SerializeField] private PauseUI pauseUIPrefab;
+
+    [SerializeField] private SpriteRenderer alertZoneRenderer;
+    #endregion Inspector Attributes
 
     public int Points
     {
@@ -43,16 +58,64 @@ public class LevelManager : MonoBehaviour
     }
     private int points;
 
-    private int maxScore;
+    public bool Pause
+    {
+        get { return pause; }
+        set
+        {
+            if (value)
+            {
+                pause = true;
+                Time.timeScale = 0.0f;
+                PauseUI pauseUI = Instantiate(pauseUIPrefab, canvas.transform);
+                pauseUI.Init(this);
+            }
+            else
+            {
+                Time.timeScale = 1.0f;
+                StartCoroutine(ResumeDelay());
+            }
+
+        }
+    }
+    private bool pause;
+
+    private IEnumerator ResumeDelay()
+    {
+        yield return new WaitForSeconds(1.0f);
+        pause = false;
+    }
+
+
+    /// <summary>
+    /// Cuando es modificado activa/desactiva la zona de alerta
+    /// TODO: LLEVARLO A BOARD
+    /// </summary>
+    public bool Alert
+    {
+        get { return alertZoneRenderer.enabled; }
+        set
+        {
+            alertZoneRenderer.enabled = value;
+
+            if (value)
+            {
+                alertRoutine = AlertRoutine();
+                StartCoroutine(alertRoutine);
+            }
+            else
+            {
+                if (alertRoutine != null)
+                    StopCoroutine(alertRoutine);
+            }
+        }
+    }
+    private IEnumerator alertRoutine;
+
 
     public int CurrentNumBalls { get; set; }
 
-    public delegate void OnRoundStart();
-    public OnRoundStart OnRoundStartCallback;
-
-    public delegate void OnRoundEnd();
-    public OnRoundStart OnRoundEndCallback;
-
+    private int maxScore;
     /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
     /// </summary>
@@ -68,6 +131,8 @@ public class LevelManager : MonoBehaviour
         board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel]);
 
         maxScore = board.PendingTiles * 50;
+        Pause = false;
+        Alert = board.DetectAlert();
     }
 
     /// <summary>
@@ -99,9 +164,24 @@ public class LevelManager : MonoBehaviour
         {
             if (starImage.enabled)
                 stars++;
-
         }
+
         GameOverUI gameOverUI = Instantiate(gameOverUIPrefab, canvas.transform);
         gameOverUI.Init(board.PendingTiles == 0, stars);
+        pause = true;
+    }
+
+    private IEnumerator AlertRoutine()
+    {
+        while (true)
+        {
+            UtilitiesManager.Instance.FadeInFadeOut(alertZoneRenderer, alertDuration / 2);
+            yield return new WaitForSeconds(alertDuration);
+        }
+    }
+
+    public void AllBallsGoToSink()
+    {
+
     }
 }
