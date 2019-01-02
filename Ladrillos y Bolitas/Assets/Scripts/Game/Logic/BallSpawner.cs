@@ -1,6 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections;
 
 /// <summary>
 /// Spawner de la pelota.
@@ -8,17 +7,20 @@ using System.Collections.Generic;
 /// </summary>
 public class BallSpawner : MonoBehaviour
 {
-    private Ball _ballPrefab;
-    private int _ballSpawnTickRate;
+    /// <summary>
+    /// Cada cuantos ticks se spawnea una pelota
+    /// </summary>
+    private uint _ballSpawnTickRate;
 
-    private List<Ball> balls;
+    //Other References
+    private Ball _ballPrefab;
 
     /// <summary>
     /// Inicializa el BallSpawner.
     /// Le da el Prefab de la bola y cada cuantos ticks es spawneada
     /// </summary>
     /// <param name="ball"></param>
-    public void Init(Ball ballPrefab, int ballSpawnTickRate)
+    public void Init(Ball ballPrefab, uint ballSpawnTickRate)
     {
         _ballPrefab = ballPrefab;
         _ballSpawnTickRate = ballSpawnTickRate;
@@ -29,7 +31,7 @@ public class BallSpawner : MonoBehaviour
     /// </summary>
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
-    public void SpawnBalls(int numBalls, Vector2 ballVelocity)
+    public void SpawnBalls(uint numBalls, Vector2 ballVelocity)
     {
         StartCoroutine(SpawnBallsCoroutine(numBalls, ballVelocity));
     }
@@ -40,7 +42,7 @@ public class BallSpawner : MonoBehaviour
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
     /// <returns></returns>
-    private IEnumerator SpawnBallsCoroutine(int numBalls, Vector2 ballVelocity)
+    private IEnumerator SpawnBallsCoroutine(uint numBalls, Vector2 ballVelocity)
     {
         for (int i = 0; i < numBalls; i++)
         {

@@ -1,46 +1,97 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections;
 
 /// <summary>
 /// Tablero contenedor de todos los tiles
+/// Constructor del tablero y controlador del mismo
 /// </summary>
 public class Board : MonoBehaviour
 {
-    public const int BOARDHEIGHT = 14;
-    public const int BOARDWIDTH = 11;
+    public const uint BOARD_HEIGHT = 14;
+    public const uint BOARD_WIDTH = 11;
 
-    public const int VISIBLEHEIGHT = 13;
     /// <summary>
     /// Array con los prefabs de los diferentes tiles
     /// </summary>
     [SerializeField] private Tile[] tilePrefabs;
+    [SerializeField] private SpriteRenderer alertZoneRenderer;
 
     /// <summary>
     /// Tiles que quedan por destruir
     /// </summary>
-    public int PendingTiles { get; protected set; }
-
-    private LevelManager _levelManager;
-    private Tile[,] _board; //Array de Tiles
-
-    private int width;
-    private int height;
-
-    private int tilesDestroyedThisRound;
+    public uint PendingTiles { get; protected set; }
 
     /// <summary>
-    /// Fichero que queremos leer
+    /// Cuando es modificado activa/desactiva la zona de alerta
     /// </summary>
-    public void Init(LevelManager levelManager, TextAsset map)
+    private bool alert
+    {
+        get { return alertZoneRenderer.enabled; }
+        set
+        {
+            alertZoneRenderer.enabled = value;
+
+            if (value)
+            {
+                alertRoutine = AlertRoutine();
+                StartCoroutine(alertRoutine);
+            }
+            else
+            {
+                if (alertRoutine != null)
+                    StopCoroutine(alertRoutine);
+            }
+        }
+    }
+    /// <summary>
+    /// Referencia a la corrutina
+    /// </summary>
+    private IEnumerator alertRoutine;
+
+    /// <summary>
+    /// Tiles que se han destruido esta ronda
+    /// </summary>
+    private uint tilesDestroyedThisRound;
+
+    /// <summary>
+    /// Puntos que otorga el primerTile destruido
+    /// </summary>
+    private uint _tilePoints;
+
+    /// <summary>
+    /// Duración de la alerta
+    /// </summary>
+    private float _alertDuration;
+
+    //Ancho y alto del mapa
+    private uint width;
+    private uint height;
+
+    //Other References
+    private LevelManager _levelManager;
+    private Tile[,] _board;
+
+
+    /// <summary>
+    /// Construye el tablero del mapa pasado
+    /// Se suscribe a eventos de OnRoundStart y OnRoundEnd
+    /// </summary>
+    /// <param name="levelManager"></param>
+    /// <param name="map"></param>
+    public void Init(LevelManager levelManager, TextAsset map, uint tilePoints, float alertDuration)
     {
         _levelManager = levelManager;
+        _tilePoints = tilePoints;
+        _alertDuration = alertDuration;
         PendingTiles = 0;
 
+        //Division por layers
         string[] layers = map.text.Split(new string[] { "[layer]" }, StringSplitOptions.None);
 
-        //Calculo del tamaño del board
-        width = layers[1].Split('\n')[3].Split(',').Length - 1;
-        height = layers[1].Split('\n').Length - 4;
+        //Calculo del tamaño del mapa
+        width = (uint)layers[1].Split('\n')[3].Split(',').Length - 1;
+        height = (uint)layers[1].Split('\n').Length - 4;
 
         //Tipos de Tile
         int[,] typeMap = DataStringToIntMap(layers[1].Split(new string[] { "data=" }, StringSplitOptions.None)[1]);
@@ -52,13 +103,15 @@ public class Board : MonoBehaviour
         _board = new Tile[height, width];
 
         //Creación del tablero
-        for (int i = 1; i < height; i++)
+        for (uint i = 1; i < height; i++)
         {
-            for (int j = 0; j < width; j++)
+            for (uint j = 0; j < width; j++)
             {
+                //Si hay algún tipo de bloque
                 if (typeMap[height - i - 1, j] > 0)
                 {
                     //TODO: DEBUG
+                    //Si el bloque aún no ha sido implementado
                     if (tilePrefabs[typeMap[height - i - 1, j] - 1] == null)
                         Debug.LogError("Tile: " + typeMap[height - i - 1, j] + " no implementado");
 
@@ -67,6 +120,7 @@ public class Board : MonoBehaviour
                         Tile tile = tilePrefabs[typeMap[height - i - 1, j] - 1];
                         _board[i, j] = Instantiate(tile, transform.position + new Vector3(j, i, 0), tile.transform.rotation, transform);
 
+                        //Es un tile que se tiene que destruir
                         if (tile.MustBeDestroyed())
                         {
                             _board[i, j].Init(healthMap[height - i - 1, j], TileDestroyed);
@@ -80,8 +134,12 @@ public class Board : MonoBehaviour
             }
         }
 
+        //Se suscribe a eventos
         levelManager.OnRoundStartCallback += OnRoundStart;
         levelManager.OnRoundEndCallback += OnRoundEnd;
+
+        //Detectamos si hay alerta al inicio
+        alert = DetectAlert();
     }
 
     /// <summary>
@@ -95,15 +153,26 @@ public class Board : MonoBehaviour
 
         int[,] intMap = new int[height, width];
 
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++)
+        for (uint i = 0; i < height; i++)
+            for (uint j = 0; j < width; j++)
                 intMap[i, j] = int.Parse(stringMap[i * width + j].Trim());
 
         return intMap;
     }
 
     /// <summary>
+    /// Es llamado cuando empieza una tirada
+    /// Se quita la alerta y se reestablecen los tilesDestroyedThisRound a 0
+    /// </summary>
+    private void OnRoundStart()
+    {
+        alert = false;
+        tilesDestroyedThisRound = 0;
+    }
+
+    /// <summary>
     /// Es llamado cuando un tile es destruido
+    /// Lo elimina del tablero y aumenta los puntos
     /// </summary>
     /// <param name="tile"></param>
     public void TileDestroyed(Tile tile)
@@ -112,30 +181,25 @@ public class Board : MonoBehaviour
         PendingTiles--;
 
         tilesDestroyedThisRound++;
-        _levelManager.Points += tilesDestroyedThisRound * 10;   //TODO: Parametrico
-    }
-
-    public void OnRoundStart()
-    {
-        _levelManager.Alert = false;
-        tilesDestroyedThisRound = 0;
+        _levelManager.Points += tilesDestroyedThisRound * _tilePoints;
     }
 
     /// <summary>
     /// Es llamado cuando ha acabado una tirada
-    /// Baja todos los ladrillos
+    /// Baja todos los ladrillos y comprueba el estado de la partida
     /// </summary>
-    public void OnRoundEnd()
+    private void OnRoundEnd()
     {
+        //Si todos los bloques han sido destruidos
         if (PendingTiles == 0)
             _levelManager.LevelEnd();
 
         else
         {
             //Bajamos todos los tiles
-            for (int i = 1; i < height; i++)
+            for (uint i = 1; i < height; i++)
             {
-                for (int j = 0; j < width; j++)
+                for (uint j = 0; j < width; j++)
                 {
                     //Si hay tile
                     if (_board[i, j] != null)
@@ -150,7 +214,7 @@ public class Board : MonoBehaviour
                             {
                                 _board[i, j] = null;
                                 _board[i - 1, j] = tile;
-                                tile.SetPosition(new Vector2Int(j, i - 1));
+                                tile.SetPosition(new Vector2Int((int)j, (int)i - 1));
                             }
                         }
                     }
@@ -158,22 +222,31 @@ public class Board : MonoBehaviour
             }
 
             //Comprobación si se ha perdido
-            int k = 0;
-            while (k < width)
+            bool gameOver = false;
+            uint k = 0;
+            while (!gameOver && k < width)
             {
                 if (_board[0, k] != null)
-                {
-                    k = width;
-                    _levelManager.LevelEnd();
-                }
+                    gameOver = true;
                 k++;
             }
-            _levelManager.Alert = DetectAlert();
+
+            //Si se ha perdido
+            if (gameOver)
+                _levelManager.LevelEnd();
+
+            //No se ha perdido, detectamos si hay que activar la alerta
+            else
+                alert = DetectAlert();
         }
 
     }
 
-    public bool DetectAlert()
+    /// <summary>
+    /// Devuelve si hay que activar la alerta
+    /// </summary>
+    /// <returns></returns>
+    private bool DetectAlert()
     {
         int k = 0;
         bool alert = false;
@@ -187,6 +260,19 @@ public class Board : MonoBehaviour
         }
 
         return alert;
+    }
+
+    /// <summary>
+    /// Rutina de animación de la alerta
+    /// </summary>
+    /// <returns></returns>
+    private IEnumerator AlertRoutine()
+    {
+        while (true)
+        {
+            UtilitiesManager.Instance.FadeInFadeOut(alertZoneRenderer, _alertDuration / 2);
+            yield return new WaitForSeconds(_alertDuration);
+        }
     }
 }
 

@@ -1,12 +1,18 @@
 ﻿using UnityEngine;
 
+/// <summary>
+/// Clase virtual que representa un tile del juego
+/// Todas los tipos de Tiles heredan de esta clase base
+/// </summary>
 public class Tile : MonoBehaviour
 {
-    public virtual bool MustBeDestroyed() {return true; }
+    //Propiedades especificas del tile
+    public virtual bool MustBeDestroyed() { return true; }
     public virtual bool CanFall() { return true; }
 
-    public int X { get; set; }
-    public int Y { get; set; }
+    //Posicion
+    public uint X { get; set; }
+    public uint Y { get; set; }
 
     protected SpriteRenderer spriteRenderer;
 
@@ -15,14 +21,12 @@ public class Tile : MonoBehaviour
     /// </summary>
     protected virtual bool visible
     {
-        get { return _visible; }
+        get { return spriteRenderer.enabled; }
         set
         {
-            _visible = value;
-            spriteRenderer.enabled = _visible;
+            spriteRenderer.enabled = value;
         }
     }
-    protected bool _visible;
 
     /// <summary>
     /// Obtiene referencias
@@ -30,10 +34,16 @@ public class Tile : MonoBehaviour
     protected virtual void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (spriteRenderer == null)
+            Debug.LogError("SpriteRenderer no asociado");
+#endif
     }
 
     /// <summary>
     /// Inicializa el Tile
+    /// Establece su posicion
     /// </summary>
     /// <param name="health"></param>
     /// <param name="onDestroyCallBack"></param>
@@ -44,15 +54,16 @@ public class Tile : MonoBehaviour
 
     /// <summary>
     /// Establece la nueva posición del tile
+    /// Establece si es visible
     /// </summary>
     /// <param name="x"></param>
     /// <param name="y"></param>
     public void SetPosition(Vector2Int newPos)
     {
-        X = newPos.x;
-        Y = newPos.y;
+        X = (uint)newPos.x;
+        Y = (uint)newPos.y;
 
-        visible = Y < Board.VISIBLEHEIGHT;
+        visible = Y < (Board.BOARD_HEIGHT - 1);
 
         transform.localPosition = new Vector3(X, Y, 0);
     }

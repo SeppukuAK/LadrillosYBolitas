@@ -25,6 +25,9 @@ TODO: Duda: Utilizar las opciones del placeholder???
 -Boton de acelerar velocidad
 -NO DETECTAR EL INPUT AL TOCAR EL CANVAS
 -Limpieza de todo: UI
+-Lista de bolas en balSpawner
+
+Limpiar todo el aimController
 
 Entrega: mirar
 

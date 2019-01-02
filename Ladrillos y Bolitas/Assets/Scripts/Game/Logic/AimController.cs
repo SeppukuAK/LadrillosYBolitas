@@ -14,15 +14,16 @@ public class AimController : MonoBehaviour
     [SerializeField] private float fastImageDuration;
     [SerializeField] private Image fastImage;
 
-    //Own Components
-    private LineRenderer lineRenderer;
-
-    //References
-    private LevelManager _levelManager;
-    private BallSpawner _ballSpawner;
-
     private bool canShoot;
     private float _ballVelocity;
+    private uint _maxTimeScale;
+
+    //Own References
+    private LineRenderer lineRenderer;
+
+    //Other References
+    private LevelManager _levelManager;
+    private BallSpawner _ballSpawner;
 
     /// <summary>
     /// Obtiene referencias
@@ -30,13 +31,19 @@ public class AimController : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (lineRenderer == null)
+            Debug.LogError("LineRenderer no asociado");
+#endif
     }
 
-    public void Init(LevelManager levelManager, BallSpawner ballSpawner, float ballVelocity)
+    public void Init(LevelManager levelManager, BallSpawner ballSpawner, float ballVelocity, uint maxTimeScale)
     {
         _levelManager = levelManager;
         _ballSpawner = ballSpawner;
         _ballVelocity = ballVelocity;
+        _maxTimeScale = maxTimeScale;
 
         lineRenderer.positionCount = 0;
         levelManager.OnRoundStartCallback += OnRoundStart;
@@ -68,7 +75,7 @@ public class AimController : MonoBehaviour
     /// </summary>
 	private void Update()
     {
-        if (!_levelManager.Pause )
+        if (!_levelManager.Pause)
         {
             if (canShoot)
             {
@@ -78,7 +85,7 @@ public class AimController : MonoBehaviour
                     mousePos.z = 0;
 
                     //Comprobación de si ha pulsado dentro
-                    if (Mathf.Abs(mousePos.y) <= Board.BOARDHEIGHT / 2.0f && Mathf.Abs(mousePos.x) <= Board.BOARDWIDTH / 2.0f)
+                    if (Mathf.Abs(mousePos.y) <= Board.BOARD_HEIGHT / 2.0f && Mathf.Abs(mousePos.x) <= Board.BOARD_WIDTH / 2.0f)
                     {
                         //Comprobar si no pulsa demasiado cerca
                         _levelManager.RoundStart();
@@ -149,15 +156,15 @@ public class AimController : MonoBehaviour
             }
             else
             {
-                if (Input.GetMouseButtonUp(0) && Time.timeScale <10f)
+                if (Input.GetMouseButtonUp(0) && Time.timeScale < _maxTimeScale)
                 {
                     Time.timeScale++;
-                    
+
                     StartCoroutine(FadeInFadeOut());
                 }
             }
         }
-     
+
     }
 
     private IEnumerator FadeInFadeOut()

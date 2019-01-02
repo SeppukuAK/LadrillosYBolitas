@@ -8,6 +8,7 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
+    //Other References
     private Rigidbody2D rb;
 
     /// <summary>
@@ -18,7 +19,7 @@ public class Ball : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (rb == null)
-            Debug.LogError("ME FALTA EL RIGIDBODY");
+            Debug.LogError("Rigidbody no asociado");
 #endif
     }
 
@@ -46,7 +47,7 @@ public class Ball : MonoBehaviour
     /// <param name="pos"></param>
     /// <param name="vel"></param>
     /// <param name="endMove"></param>
-    public void MoveTo(Vector3 pos , float time, System.Action<Ball> endMoveCallback = null)
+    public void MoveTo(Vector3 pos, float time, System.Action<Ball> endMoveCallback = null)
     {
         StartCoroutine(MoveToCoroutine(pos, time, endMoveCallback));
     }
@@ -61,6 +62,7 @@ public class Ball : MonoBehaviour
     /// <returns></returns>
     private IEnumerator MoveToCoroutine(Vector3 pos, float time, System.Action<Ball> endMoveCallback = null)
     {
+        //Calculo de ticks y de direccion
         float totalTicks = time / Time.fixedDeltaTime;
         float distancePerTick = (pos - transform.position).magnitude / totalTicks;
         Vector2 dir = (pos - transform.position).normalized;

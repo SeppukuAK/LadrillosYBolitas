@@ -1,15 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GameOverUI : MonoBehaviour {
-
+/// <summary>
+/// Manejador del UI del GameOver
+/// </summary>
+public class GameOverUI : MonoBehaviour
+{
     [SerializeField] private Text levelText;
-    [SerializeField] private Image [] starsImages;
     [SerializeField] private Text statusText;
+    [SerializeField] private Image[] starsImages;
 
     [SerializeField] private Button nextLevelButton;
     [SerializeField] private Button resetLevelButton;
 
+    /// <summary>
+    /// Inicializa el Panel con los atributos necesarios
+    /// </summary>
+    /// <param name="win"></param>
+    /// <param name="stars"></param>
     public void Init(bool win, int stars)
     {
         levelText.text = "Level " + (GameManager.Instance.MapLevel + 1).ToString();
@@ -21,23 +29,32 @@ public class GameOverUI : MonoBehaviour {
                 starsImages[i].enabled = true;
         }
         else
-        {
             statusText.text = "Fail";
-        }
+
         nextLevelButton.gameObject.SetActive(win);
         resetLevelButton.gameObject.SetActive(!win);
     }
 
+    /// <summary>
+    /// Pasa al siguiente nivel
+    /// </summary>
     public void NextLevel()
     {
         GameManager.Instance.MapLevel++;
         MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
     }
+
+    /// <summary>
+    /// Resetea este nivel
+    /// </summary>
     public void ResetLevel()
     {
         MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
     }
 
+    /// <summary>
+    /// Vuelve al menu
+    /// </summary>
     public void GoMenu()
     {
         MenuCanvas.Instance.PlayLevelOptions("MenuScene", true);

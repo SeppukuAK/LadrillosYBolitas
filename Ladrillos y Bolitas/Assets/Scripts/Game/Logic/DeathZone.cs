@@ -1,19 +1,11 @@
 ﻿using UnityEngine;
 
 /// <summary>
-/// Componente asociado a um GameObject que cuando una pelota colisiona con él, le informa de que ha muerto
+/// Componente asociado a um GameObject que cuando una pelota colisiona con él, le informa de que ha muerto y que se diriga al BallSink
 /// </summary>
 [RequireComponent(typeof(BoxCollider2D))]
 public class DeathZone : MonoBehaviour
 {
-    #region References
-
-    private BallSink _ballSink;
-
-    #endregion References
-
-    #region Attributes
-
     /// <summary>
     /// Tiempo que tarda la pelota en llegar al Sink
     /// </summary>
@@ -24,7 +16,8 @@ public class DeathZone : MonoBehaviour
     /// </summary>
     private bool firstBallCollided;
 
-    #endregion Attributes
+    //Other References
+    private BallSink _ballSink;
 
     /// <summary>
     /// Inicializa el deathZone desde levelManager. 
@@ -34,7 +27,7 @@ public class DeathZone : MonoBehaviour
     /// <param name="levelManager"></param>
     /// <param name="ballToSinkTime"></param>
     /// <param name="onBallSinkArrivedCallback"></param>
-    public void Init(LevelManager levelManager,BallSink ballSink, float ballToSinkTime)
+    public void Init(LevelManager levelManager, BallSink ballSink, float ballToSinkTime)
     {
         _ballSink = ballSink;
         _ballToSinkTime = ballToSinkTime;
@@ -71,7 +64,7 @@ public class DeathZone : MonoBehaviour
             //No es la primera pelota
             else
             {
-                //Para la pelota, fuerza su posición en Y y llama a la corrutina de movimiento hacia el sink
+                //Para la pelota y llama a la corrutina de movimiento hacia el sink
                 ball.Stop();
                 ball.MoveTo(_ballSink.transform.position, _ballToSinkTime, _ballSink.OnBallArrived);
             }
