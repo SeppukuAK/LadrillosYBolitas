@@ -3,7 +3,6 @@
 Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtual
 
 -Se mantiene el progreso entre sesiones. Dificil de romper y acceder
--Se muestra la lista de niveles disponibles, bloqueados, puntuacion, etc.
 -Moneda virtual con la que comprar power-ups durante la partida (antes de tirar) en los botones inferiores
 
 -Un tipo de potenciador.(Info de ello en el documento)

@@ -75,7 +75,7 @@ public class Board : MonoBehaviour
                         else
                             _board[i, j].Init(healthMap[height - i - 1, j]);
                     }
-
+                    
                 }
             }
         }

@@ -8,7 +8,7 @@ using UnityEngine;
 public class LevelData
 {
     public uint Level;
-    public uint Points;
+    public uint Stars;
     public bool Blocked;
 }
 
@@ -29,12 +29,12 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public TextAsset[] MapData;
 
-    public uint TotalScore { get; set; }
-    public uint Coins { get; set; }
+    public uint TotalStars{ get; set; }
+    public uint Gems { get; set; }
     public List<LevelData> LevelData;
 
     [Header("Test Attributes")]
-    public int MapLevel;//Mapa con la informacion del juego
+    public uint MapLevel;//Mapa con la informacion del juego
 
     private void Awake()
     {
@@ -42,34 +42,34 @@ public class GameManager : MonoBehaviour {
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            LoadData();
+
         }
         else
             Destroy(gameObject);
-    }
-
-    private void Start()
-    {
-        LoadData();
     }
 
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.A))
             SaveData();
-        
+
+        if (Input.GetKeyDown(KeyCode.B))
+            SaveSystem.DeleteData();
+
 
         if (Input.GetKeyDown(KeyCode.S))
             LoadData();
 
         if (Input.GetKeyDown(KeyCode.D))
-            Coins++;
+            Gems++;
         if (Input.GetKeyDown(KeyCode.W))
             ResetSaveData();
     }
 
     public void SaveData()
     {
-        SaveSystem.SaveGameData(TotalScore, Coins, LevelData);
+        SaveSystem.SaveGameData(TotalStars, Gems, LevelData);
     }
 
     public void LoadData()
@@ -85,8 +85,8 @@ public class GameManager : MonoBehaviour {
         //Carga el fichero existente
         else
         {
-            TotalScore = saveDataGame.TotalScore;
-            Coins = saveDataGame.Coins;
+            TotalStars = saveDataGame.TotalStars;
+            Gems = saveDataGame.Gems;
 
             LevelData = new List<LevelData>();
 
@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour {
             {
                 LevelData levelData = new LevelData();
                 levelData.Level = saveDataGame.Level[i];
-                levelData.Points = saveDataGame.Points[i];
+                levelData.Stars = saveDataGame.Stars[i];
                 levelData.Blocked = saveDataGame.Blocked[i];
 
                 LevelData.Add(levelData);
@@ -104,14 +104,14 @@ public class GameManager : MonoBehaviour {
 
     private void ResetSaveData()
     {
-        TotalScore = 0;
-        Coins = 0;
+        TotalStars = 0;
+        Gems = 0;
         LevelData = new List<LevelData>();
 
         for (int i = 0; i < MapData.Length; i++)
         {
             LevelData levelData = new LevelData();
-            levelData.Points = 0;
+            levelData.Stars = 0;
             levelData.Level = (uint)i + 1;
             levelData.Blocked = true;
 

@@ -14,10 +14,10 @@ public static class SaveSystem
     /// <summary>
     /// Guarda el estado del juego en un fichero serializado
     /// </summary>
-    /// <param name="totalScore"></param>
-    /// <param name="coins"></param>
+    /// <param name="totalStars"></param>
+    /// <param name="gems"></param>
     /// <param name="levelData"></param>
-    public static void SaveGameData(uint totalScore, uint coins, List<LevelData> levelData)
+    public static void SaveGameData(uint totalStars, uint gems, List<LevelData> levelData)
     {
         //Creamos un BinaryFormatter
         BinaryFormatter formatter = new BinaryFormatter();
@@ -25,13 +25,18 @@ public static class SaveSystem
         //Para leer /escribir en el archivo
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        SaveDataGame saveDataGame = new SaveDataGame(totalScore, coins, levelData);
+        SaveDataGame saveDataGame = new SaveDataGame(totalStars, gems, levelData);
 
         //Convierte la clase a binario
         formatter.Serialize(stream, saveDataGame);
 
         //Hay que cerrarlo siempre
         stream.Close();
+    }
+    public static void DeleteData()
+    {
+        File.Delete(path);
+        Debug.Log("archivo borrado");
     }
 
     /// <summary>
