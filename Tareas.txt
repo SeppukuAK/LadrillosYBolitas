@@ -28,6 +28,7 @@ TODO: Duda: Utilizar las opciones del placeholder???
 -Lista de bolas en balSpawner
 
 Limpiar todo el aimController
+Las bolas se atascan mucho
 
 Entrega: mirar
 
