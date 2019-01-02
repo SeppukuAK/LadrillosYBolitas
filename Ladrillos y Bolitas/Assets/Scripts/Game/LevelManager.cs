@@ -120,6 +120,7 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public List<Ball> Balls { get; set; }
 
+
     /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
     /// </summary>
@@ -128,6 +129,7 @@ public class LevelManager : MonoBehaviour
         CurrentNumBalls = uint.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.MapLevel].Split(' ', ',')[1]);        //Obtiene el numero de pelotas iniciales
         Points = 0;
         pause = false;
+       
 
         aimController.Init(this, ballSpawner, ballVelocity, maxTimeScale);
         ballSpawner.Init(this, ballPrefab, ballSpawnTickRate);
@@ -184,14 +186,27 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void LevelEnd()
     {
-        int stars = 0;
+        uint stars = 0;
+        bool win;
+
         foreach (Image starImage in starsImages)
         {
             if (starImage.enabled)
                 stars++;
         }
 
-        Instantiate(gameOverUIPrefab).Init(board.PendingTiles == 0, stars);
+        win = (board.PendingTiles == 0);
+
+
+        //Guardamos los datos
+        if (win)
+        {
+            GameManager.Instance.LevelData[(int)GameManager.Instance.MapLevel + 1].Blocked = false;
+            GameManager.Instance.LevelData[(int)GameManager.Instance.MapLevel].Stars = stars;
+            GameManager.Instance.SaveData();
+        }
+
+        Instantiate(gameOverUIPrefab).Init(win, stars);
         pause = true;
     }
 

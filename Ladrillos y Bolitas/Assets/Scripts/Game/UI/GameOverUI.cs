@@ -18,7 +18,7 @@ public class GameOverUI : MonoBehaviour
     /// </summary>
     /// <param name="win"></param>
     /// <param name="stars"></param>
-    public void Init(bool win, int stars)
+    public void Init(bool win, uint stars)
     {
         levelText.text = "Level " + (GameManager.Instance.MapLevel + 1).ToString();
         if (win)
@@ -40,6 +40,7 @@ public class GameOverUI : MonoBehaviour
     /// </summary>
     public void NextLevel()
     {
+        GameManager.Instance.SaveData();
         GameManager.Instance.MapLevel++;
         MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
     }

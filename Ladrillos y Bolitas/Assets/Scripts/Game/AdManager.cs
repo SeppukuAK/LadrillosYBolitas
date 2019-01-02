@@ -19,6 +19,7 @@ public class AdManager : MonoBehaviour {
         {
             case ShowResult.Finished:
                 GameManager.Instance.Gems += GameManager.Instance.AdReward; //Incrementamos el número de monedas 
+                GameManager.Instance.SaveData();//Se guarda el número de gemas
                 break;
             case ShowResult.Skipped:
                 Debug.Log("No se ha visto el video entero");
