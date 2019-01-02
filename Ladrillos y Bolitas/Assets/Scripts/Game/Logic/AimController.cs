@@ -10,7 +10,6 @@ using System.Collections;
 public class AimController : MonoBehaviour
 {
     [SerializeField] private float heightOffset;
-
     [SerializeField] private float fastImageDuration;
     [SerializeField] private Image fastImage;
 
@@ -55,7 +54,7 @@ public class AimController : MonoBehaviour
     /// <summary>
     /// Anula el poder disparar
     /// </summary>
-    public void OnRoundStart()
+    private void OnRoundStart()
     {
         canShoot = false;
     }
@@ -63,7 +62,7 @@ public class AimController : MonoBehaviour
     /// <summary>
     /// Permite volver a disparar
     /// </summary>
-    public void OnRoundEnd()
+    private void OnRoundEnd()
     {
         canShoot = true;
         Time.timeScale = 1.0f;
@@ -84,8 +83,8 @@ public class AimController : MonoBehaviour
                     Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     mousePos.z = 0;
 
-                    //Comprobación de si ha pulsado dentro
-                    if (Mathf.Abs(mousePos.y) <= Board.BOARD_HEIGHT / 2.0f && Mathf.Abs(mousePos.x) <= Board.BOARD_WIDTH / 2.0f)
+                    //Teniendo en cuenta el Offset
+                    if (OnBoard(mousePos))
                     {
                         //Comprobar si no pulsa demasiado cerca
                         _levelManager.RoundStart();
@@ -156,7 +155,7 @@ public class AimController : MonoBehaviour
             }
             else
             {
-                if (Input.GetMouseButtonUp(0) && Time.timeScale < _maxTimeScale)
+                if (Input.GetMouseButtonUp(0) && Time.timeScale < _maxTimeScale && OnBoard(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
                 {
                     Time.timeScale++;
 
@@ -165,6 +164,16 @@ public class AimController : MonoBehaviour
             }
         }
 
+    }
+
+    /// <summary>
+    /// Devuelve si la posición está dentro del tablero
+    /// </summary>
+    /// <returns></returns>
+    private bool OnBoard(Vector2 pos)
+    {
+        //Comprobación de si ha pulsado dentro y con un offset
+        return Mathf.Abs(pos.y) <= Board.BOARD_HEIGHT / 2.0f && Mathf.Abs(pos.x) <= Board.BOARD_WIDTH / 2.0f && pos.y > -(Board.BOARD_HEIGHT / 2.0f - heightOffset);
     }
 
     private IEnumerator FadeInFadeOut()

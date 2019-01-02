@@ -38,13 +38,14 @@ public class DeathZone : MonoBehaviour
     /// Es llamado cuando se hace un nuevo tiro
     /// Reestablece valores
     /// </summary>
-    public void OnRoundStart()
+    private void OnRoundStart()
     {
         firstBallCollided = false;
     }
 
     /// <summary>
     /// Detecta la colisión con la pelota
+    /// Elimina la pelota de la lista
     /// </summary>
     /// <param name="collision"></param>
     private void OnTriggerEnter2D(Collider2D collision)
@@ -68,9 +69,8 @@ public class DeathZone : MonoBehaviour
                 ball.Stop();
                 ball.MoveTo(_ballSink.transform.position, _ballToSinkTime, _ballSink.OnBallArrived);
             }
+
         }
     }
-
-
 }
 

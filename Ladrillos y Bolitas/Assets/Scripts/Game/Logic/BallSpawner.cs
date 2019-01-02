@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Spawner de la pelota.
@@ -13,6 +14,7 @@ public class BallSpawner : MonoBehaviour
     private uint _ballSpawnTickRate;
 
     //Other References
+    private LevelManager _levelManager;
     private Ball _ballPrefab;
 
     /// <summary>
@@ -20,10 +22,12 @@ public class BallSpawner : MonoBehaviour
     /// Le da el Prefab de la bola y cada cuantos ticks es spawneada
     /// </summary>
     /// <param name="ball"></param>
-    public void Init(Ball ballPrefab, uint ballSpawnTickRate)
+    public void Init(LevelManager levelManager, Ball ballPrefab, uint ballSpawnTickRate)
     {
+        _levelManager = levelManager;
         _ballPrefab = ballPrefab;
         _ballSpawnTickRate = ballSpawnTickRate;
+
     }
 
     /// <summary>
@@ -38,15 +42,19 @@ public class BallSpawner : MonoBehaviour
 
     /// <summary>
     /// Corrutina que instancia "numBalls" pelotas con "ballVelocity" de velocidad en función de _ballSpawnTickRate
+    /// Guarda las pelotas en _levelManager.Balls
     /// </summary>
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
     /// <returns></returns>
     private IEnumerator SpawnBallsCoroutine(uint numBalls, Vector2 ballVelocity)
     {
+        _levelManager.Balls = new List<Ball>();
+
         for (int i = 0; i < numBalls; i++)
         {
             Ball ball = Instantiate(_ballPrefab, transform.position, Quaternion.identity);
+            _levelManager.Balls.Add(ball);
 
             //Espera "ticks" veces llamadas a la fisica
             for (uint j = 0; j < _ballSpawnTickRate; j++)
@@ -57,4 +65,11 @@ public class BallSpawner : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// Para la generación de pelotas
+    /// </summary>
+    public void StopSpawn()
+    {
+        StopAllCoroutines();
+    }
 }

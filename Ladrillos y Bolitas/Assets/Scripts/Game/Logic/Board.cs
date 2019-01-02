@@ -182,6 +182,8 @@ public class Board : MonoBehaviour
 
         tilesDestroyedThisRound++;
         _levelManager.Points += tilesDestroyedThisRound * _tilePoints;
+
+        Destroy(tile.gameObject);
     }
 
     /// <summary>
@@ -274,5 +276,50 @@ public class Board : MonoBehaviour
             yield return new WaitForSeconds(_alertDuration);
         }
     }
+
+    #region PowerUps
+
+    /// <summary>
+    /// PowerUp: Elimina la fila inferior
+    /// </summary>
+    public void DestroyRow()
+    {
+        //Buscamos la fila
+        bool found = false;
+        uint i = 1;
+        uint j = 0;
+
+        while (!found && i < height)
+        {
+            j = 0;
+            while (!found && j < width)
+            {
+                //Si hay tile
+                if (_board[i, j] != null && _board[i, j].MustBeDestroyed())
+                    found = true;
+
+                j++;
+            }
+            i++;
+        }
+
+
+        //Destruye la fila
+        i--;
+        for (j = j-1; j < width; j++)
+        {
+            if (_board[i, j] != null && _board[i, j].MustBeDestroyed())
+                TileDestroyed(_board[i, j]);
+        }
+
+        tilesDestroyedThisRound = 0;
+
+        //Comprobamos si ha destruido todos los bloques
+        if (PendingTiles == 0)
+            _levelManager.LevelEnd();
+
+    }
+
+    #endregion PowerUps
 }
 

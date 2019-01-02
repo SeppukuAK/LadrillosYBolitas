@@ -8,8 +8,9 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
-    //Other References
+    //Own References
     private Rigidbody2D rb;
+    private Collider2D col;
 
     /// <summary>
     /// Obtiene referencias
@@ -17,9 +18,14 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (rb == null)
             Debug.LogError("Rigidbody no asociado");
+
+        if (col == null)
+            Debug.LogError("Collider2D no asociado");
 #endif
     }
 
@@ -79,5 +85,21 @@ public class Ball : MonoBehaviour
             endMoveCallback(this);
 
         yield return null;
+    }
+
+    /// <summary>
+    /// Establece el collider de la bola a trigger para que no colisione con los tiles
+    /// </summary>
+    public void SetTrigger()
+    {
+        col.isTrigger = true;
+    }
+
+    /// <summary>
+    /// Para la rutina de movimiento hacia un punto
+    /// </summary>
+    public void StopMoveRoutine()
+    {
+        StopAllCoroutines();
     }
 }

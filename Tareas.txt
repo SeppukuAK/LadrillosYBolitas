@@ -18,14 +18,9 @@ Optativo:
 
 Cosas que se me ocurren:
 TODO: Duda: Utilizar las opciones del placeholder???
--Que no se pueda disprar hacia abajo
 -Mas bloques especiales
 -panel de acabar partida: rupias
--Boton de vuelta a casa
--Boton de acelerar velocidad
--NO DETECTAR EL INPUT AL TOCAR EL CANVAS
 -Limpieza de todo: UI
--Lista de bolas en balSpawner
 
 Limpiar todo el aimController
 Las bolas se atascan mucho

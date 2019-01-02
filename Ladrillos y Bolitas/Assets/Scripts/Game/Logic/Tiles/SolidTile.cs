@@ -68,10 +68,8 @@ public class SolidTile : Tile
     {
         health--;
         if (health == 0)
-        {
             _onDestroyCallBack(this);
-            Destroy(gameObject);
-        }
+
     }
 
 }

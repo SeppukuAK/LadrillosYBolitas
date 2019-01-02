@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Manager de un nivel de juego
@@ -25,6 +26,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private float alertDuration;
     [SerializeField] private uint tilePoints;
     [SerializeField] private uint maxTimeScale;
+    [SerializeField] private float skipTime;
 
     [Header("Gameplay References")]
     [SerializeField] private Ball ballPrefab;
@@ -40,6 +42,8 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Image pointsFillBar;
     [SerializeField] private Text pointsText;
     [SerializeField] private Image[] starsImages;
+    [SerializeField] private Button skipButton;
+    [SerializeField] private RectTransform powerUpsPanel;
 
     #endregion Inspector Attributes
 
@@ -112,6 +116,11 @@ public class LevelManager : MonoBehaviour
     private uint maxScore;
 
     /// <summary>
+    /// Lista de pelotas en el juego
+    /// </summary>
+    public List<Ball> Balls { get; set; }
+
+    /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
     /// </summary>
     private void Start()
@@ -121,10 +130,10 @@ public class LevelManager : MonoBehaviour
         pause = false;
 
         aimController.Init(this, ballSpawner, ballVelocity, maxTimeScale);
-        ballSpawner.Init(ballPrefab, ballSpawnTickRate);
+        ballSpawner.Init(this, ballPrefab, ballSpawnTickRate);
         deathZone.Init(this, ballSink, ballToSinkTime);
         ballSink.Init(this);
-        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel],tilePoints,alertDuration);
+        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel], tilePoints, alertDuration);
 
         //El maxScore es en funcion del número de tiles
         maxScore = board.PendingTiles * maxScoreMultiplier;
@@ -141,11 +150,15 @@ public class LevelManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Activa el botón de skip
     /// Informa a los componentes subscritos
     /// Es llamado cuando se inicia el disparo
     /// </summary>
     public void RoundStart()
     {
+        skipButton.gameObject.SetActive(true);
+        powerUpsPanel.gameObject.SetActive(false);
+
         if (OnRoundStartCallback != null)
             OnRoundStartCallback.Invoke();
     }
@@ -153,10 +166,13 @@ public class LevelManager : MonoBehaviour
     /// <summary>
     /// Establece la posición del ballSpawner a a la del ballSink e informa a todos los subscritos que ha acabado la ronda
     /// Es llamado cuando todas las pelotas han caido
+    /// Desactiva el botón de skip
     /// </summary>
     public void RoundEnd()
     {
         ballSpawner.transform.position = ballSink.transform.position;
+        skipButton.gameObject.SetActive(false);
+        powerUpsPanel.gameObject.SetActive(true);
 
         if (OnRoundEndCallback != null)
             OnRoundEndCallback.Invoke();
@@ -178,4 +194,36 @@ public class LevelManager : MonoBehaviour
         Instantiate(gameOverUIPrefab).Init(board.PendingTiles == 0, stars);
         pause = true;
     }
+
+    /// <summary>
+    /// Para la generación de pelotas
+    /// Empieza a mover todas las pelotas hacia el sink
+    /// </summary>
+    public void MoveAllBallsToSink()
+    {
+        ballSpawner.StopSpawn();
+        skipButton.gameObject.SetActive(false);
+
+        foreach (Ball ball in Balls)
+        {
+            ball.Stop();
+            ball.StopMoveRoutine();
+            ball.SetTrigger();
+            ball.MoveTo(ballSink.transform.position, skipTime, ballSink.OnBallArrived);
+        }
+
+    }
+
+    #region PowerUps
+
+    /// <summary>
+    /// PowerUp: Elimina la fila inferior
+    /// </summary>
+    public void DestroyRow()
+    {
+        board.DestroyRow();
+    }
+    #endregion PowerUps
+
+
 }
