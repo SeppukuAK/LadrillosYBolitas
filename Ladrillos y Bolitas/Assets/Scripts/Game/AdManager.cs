@@ -1,8 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.Advertisements;
 
+/// <summary>
+/// Manager de los anuncios
+/// Si el usuario ve todo el anuncio, le recompensamos con gemas
+/// </summary>
 public class AdManager : MonoBehaviour {
 
     public void ShowAd()
@@ -16,7 +18,7 @@ public class AdManager : MonoBehaviour {
         switch (result)
         {
             case ShowResult.Finished:
-                GameManager.Instance.Coins += 5; //Incrementamos el número de monedas
+                GameManager.Instance.Coins += GameManager.Instance.AdReward; //Incrementamos el número de monedas 
                 break;
             case ShowResult.Skipped:
                 Debug.Log("No se ha visto el video entero");

@@ -6,6 +6,8 @@ public class DoubleSolidTile : SolidTile {
 
     /// <summary>
     /// Inicializa el Tile
+    /// Establece su posicion y guarda la vida y callback
+    /// La vida es duplicada
     /// </summary>
     /// <param name="health"></param>
     /// <param name="onDestroyCallBack"></param>

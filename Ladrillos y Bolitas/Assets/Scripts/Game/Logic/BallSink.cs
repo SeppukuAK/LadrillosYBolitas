@@ -8,30 +8,17 @@ using UnityEngine.UI;
 [RequireComponent(typeof(SpriteRenderer))]
 public class BallSink : MonoBehaviour
 {
-    #region References
+    /// <summary>
+    /// Número de pelotas que tienen que llegar al sink esta ronda
+    /// </summary>
+    private uint roundBalls;
+
     //Own References
     private Text labelText;
     private SpriteRenderer ballSprite;
 
     //Other References
     private LevelManager _levelManager;
-    #endregion References
-
-    #region Attributes
-
-    /// <summary>
-    /// Numero actual de pelotas que han llegado al ballsink durante esta ronda
-    /// Modifica el texto cuando es actualizado su valor
-    /// </summary>
-    private int currentNumBalls { get { return _currentNumBalls; } set { _currentNumBalls = value; labelText.text = "x" + _currentNumBalls; } }
-    private int _currentNumBalls;
-
-    /// <summary>
-    /// Pelotas que tienen que llegar al BallSink durante esta ronda
-    /// </summary>
-    private int totalNumBalls;
-
-    #endregion Attributes
 
     /// <summary>
     /// Obtiene referencias
@@ -40,6 +27,14 @@ public class BallSink : MonoBehaviour
     {
         ballSprite = GetComponent<SpriteRenderer>();
         labelText = GetComponentInChildren<Text>();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (ballSprite == null)
+            Debug.LogError("SpriteRenderer no asociado");
+
+        if (labelText == null)
+            Debug.LogError("Text no asociado");
+#endif
     }
 
     /// <summary>
@@ -52,18 +47,27 @@ public class BallSink : MonoBehaviour
     public void Init(LevelManager levelManager)
     {
         _levelManager = levelManager;
-        currentNumBalls = _levelManager.CurrentNumBalls;
+        labelText.text = "x" + _levelManager.CurrentNumBalls.ToString();
         _levelManager.OnRoundStartCallback += OnRoundStart;
+        _levelManager.OnRoundEndCallback += OnRoundEnd;
     }
 
     /// <summary>
-    /// Reinicia el contador de pelotas
+    /// Reinicia el contador de pelotas y se oculta
     /// </summary>
-    public void OnRoundStart()
+    private void OnRoundStart()
     {
-        currentNumBalls = 0;
-        totalNumBalls = _levelManager.CurrentNumBalls;
+        roundBalls = _levelManager.CurrentNumBalls;
+        labelText.text = "x0";
         Hide();
+    }
+
+    /// <summary>
+    /// Muestra el BallSink
+    /// </summary>
+    private void OnRoundEnd()
+    {
+        Show(transform.position.x);
     }
 
     /// <summary>
@@ -81,7 +85,7 @@ public class BallSink : MonoBehaviour
     /// <param name="pos"></param>
     public void Show(float x)
     {
-        transform.position = new Vector3(x,transform.position.y,transform.position.z);
+        transform.position = new Vector3(x, transform.position.y, transform.position.z);
 
         labelText.enabled = true;
         ballSprite.enabled = true;
@@ -92,10 +96,12 @@ public class BallSink : MonoBehaviour
     /// </summary>
     public void OnBallArrived(Ball ball)
     {
+        _levelManager.Balls.Remove(ball);
         Destroy(ball.gameObject);
-        currentNumBalls++;
 
-        if (currentNumBalls == totalNumBalls)
+        labelText.text = "x" + (roundBalls - _levelManager.Balls.Count).ToString();
+
+        if (_levelManager.Balls.Count == 0)
             _levelManager.RoundEnd();
     }
 }

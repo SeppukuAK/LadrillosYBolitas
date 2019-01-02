@@ -124,7 +124,7 @@ GameObject:
   - component: {fileID: 7831675}
   - component: {fileID: 7831674}
   m_Layer: 5
-  m_Name: CartelaImage (1)
+  m_Name: Circle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -372,7 +372,7 @@ GameObject:
   - component: {fileID: 353075450}
   - component: {fileID: 353075449}
   m_Layer: 5
-  m_Name: CartelaImage
+  m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

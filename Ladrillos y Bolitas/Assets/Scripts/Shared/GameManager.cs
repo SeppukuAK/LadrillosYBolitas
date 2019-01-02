@@ -33,6 +33,9 @@ public class GameManager : MonoBehaviour {
     public uint Gems { get; set; }
     public List<LevelData> LevelData;
 
+    [Header("Game Attributes")]
+    public uint AdReward;
+
     [Header("Test Attributes")]
     public uint MapLevel;//Mapa con la informacion del juego
 

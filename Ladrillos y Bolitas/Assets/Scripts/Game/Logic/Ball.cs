@@ -8,7 +8,9 @@ using System.Collections;
 [RequireComponent(typeof(Rigidbody2D))]
 public class Ball : MonoBehaviour
 {
+    //Own References
     private Rigidbody2D rb;
+    private Collider2D col;
 
     /// <summary>
     /// Obtiene referencias
@@ -16,9 +18,14 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
+
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
         if (rb == null)
-            Debug.LogError("ME FALTA EL RIGIDBODY");
+            Debug.LogError("Rigidbody no asociado");
+
+        if (col == null)
+            Debug.LogError("Collider2D no asociado");
 #endif
     }
 
@@ -46,7 +53,7 @@ public class Ball : MonoBehaviour
     /// <param name="pos"></param>
     /// <param name="vel"></param>
     /// <param name="endMove"></param>
-    public void MoveTo(Vector3 pos , float time, System.Action<Ball> endMoveCallback = null)
+    public void MoveTo(Vector3 pos, float time, System.Action<Ball> endMoveCallback = null)
     {
         StartCoroutine(MoveToCoroutine(pos, time, endMoveCallback));
     }
@@ -61,6 +68,7 @@ public class Ball : MonoBehaviour
     /// <returns></returns>
     private IEnumerator MoveToCoroutine(Vector3 pos, float time, System.Action<Ball> endMoveCallback = null)
     {
+        //Calculo de ticks y de direccion
         float totalTicks = time / Time.fixedDeltaTime;
         float distancePerTick = (pos - transform.position).magnitude / totalTicks;
         Vector2 dir = (pos - transform.position).normalized;
@@ -77,5 +85,21 @@ public class Ball : MonoBehaviour
             endMoveCallback(this);
 
         yield return null;
+    }
+
+    /// <summary>
+    /// Establece el collider de la bola a trigger para que no colisione con los tiles
+    /// </summary>
+    public void SetTrigger()
+    {
+        col.isTrigger = true;
+    }
+
+    /// <summary>
+    /// Para la rutina de movimiento hacia un punto
+    /// </summary>
+    public void StopMoveRoutine()
+    {
+        StopAllCoroutines();
     }
 }

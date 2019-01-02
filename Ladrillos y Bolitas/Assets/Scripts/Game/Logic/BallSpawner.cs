@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using UnityEngine;
+﻿using UnityEngine;
+using System.Collections;
 using System.Collections.Generic;
 
 /// <summary>
@@ -8,20 +8,26 @@ using System.Collections.Generic;
 /// </summary>
 public class BallSpawner : MonoBehaviour
 {
-    private Ball _ballPrefab;
-    private int _ballSpawnTickRate;
+    /// <summary>
+    /// Cada cuantos ticks se spawnea una pelota
+    /// </summary>
+    private uint _ballSpawnTickRate;
 
-    private List<Ball> balls;
+    //Other References
+    private LevelManager _levelManager;
+    private Ball _ballPrefab;
 
     /// <summary>
     /// Inicializa el BallSpawner.
     /// Le da el Prefab de la bola y cada cuantos ticks es spawneada
     /// </summary>
     /// <param name="ball"></param>
-    public void Init(Ball ballPrefab, int ballSpawnTickRate)
+    public void Init(LevelManager levelManager, Ball ballPrefab, uint ballSpawnTickRate)
     {
+        _levelManager = levelManager;
         _ballPrefab = ballPrefab;
         _ballSpawnTickRate = ballSpawnTickRate;
+
     }
 
     /// <summary>
@@ -29,22 +35,26 @@ public class BallSpawner : MonoBehaviour
     /// </summary>
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
-    public void SpawnBalls(int numBalls, Vector2 ballVelocity)
+    public void SpawnBalls(uint numBalls, Vector2 ballVelocity)
     {
         StartCoroutine(SpawnBallsCoroutine(numBalls, ballVelocity));
     }
 
     /// <summary>
     /// Corrutina que instancia "numBalls" pelotas con "ballVelocity" de velocidad en función de _ballSpawnTickRate
+    /// Guarda las pelotas en _levelManager.Balls
     /// </summary>
     /// <param name="numBalls"></param>
     /// <param name="ballVelocity"></param>
     /// <returns></returns>
-    private IEnumerator SpawnBallsCoroutine(int numBalls, Vector2 ballVelocity)
+    private IEnumerator SpawnBallsCoroutine(uint numBalls, Vector2 ballVelocity)
     {
+        _levelManager.Balls = new List<Ball>();
+
         for (int i = 0; i < numBalls; i++)
         {
             Ball ball = Instantiate(_ballPrefab, transform.position, Quaternion.identity);
+            _levelManager.Balls.Add(ball);
 
             //Espera "ticks" veces llamadas a la fisica
             for (uint j = 0; j < _ballSpawnTickRate; j++)
@@ -55,4 +65,11 @@ public class BallSpawner : MonoBehaviour
         yield return null;
     }
 
+    /// <summary>
+    /// Para la generación de pelotas
+    /// </summary>
+    public void StopSpawn()
+    {
+        StopAllCoroutines();
+    }
 }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// Manager de un nivel de juego
@@ -18,10 +19,14 @@ public class LevelManager : MonoBehaviour
 
     #region Inspector Attributes
     [Header("Game Attributes")]
-    [SerializeField] private int ballSpawnTickRate;
+    [SerializeField] private uint ballSpawnTickRate;
     [SerializeField] private float ballToSinkTime;
     [SerializeField] private float ballVelocity;
+    [SerializeField] private uint maxScoreMultiplier;
     [SerializeField] private float alertDuration;
+    [SerializeField] private uint tilePoints;
+    [SerializeField] private uint maxTimeScale;
+    [SerializeField] private float skipTime;
 
     [Header("Gameplay References")]
     [SerializeField] private Ball ballPrefab;
@@ -30,34 +35,43 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private DeathZone deathZone;
     [SerializeField] private Board board;
     [SerializeField] private AimController aimController;
+    [SerializeField] private PauseUI pauseUIPrefab;
+    [SerializeField] private GameOverUI gameOverUIPrefab;
 
     [Header("UI References")]
-    [SerializeField] private Canvas canvas;
     [SerializeField] private Image pointsFillBar;
     [SerializeField] private Text pointsText;
     [SerializeField] private Image[] starsImages;
-    [SerializeField] private GameOverUI gameOverUIPrefab;
-    [SerializeField] private PauseUI pauseUIPrefab;
+    [SerializeField] private Button skipButton;
+    [SerializeField] private RectTransform powerUpsPanel;
 
-    [SerializeField] private SpriteRenderer alertZoneRenderer;
     #endregion Inspector Attributes
 
-    public int Points
+    #region Properties
+    /// <summary>
+    /// Puntuación del jugador.
+    /// Actualiza el UI cuando es modificado
+    /// </summary>
+    public uint Points
     {
-        get { return points; }
+        get { return uint.Parse(pointsText.text); }
         set
         {
-            points = value;
+            uint points = value;
+
+            //Actualiza el UI
             pointsText.text = points.ToString();
             pointsFillBar.fillAmount = Mathf.Clamp01((float)points / maxScore);
-
             starsImages[0].enabled = points >= 0;
             starsImages[1].enabled = pointsFillBar.fillAmount >= 0.7f;
             starsImages[2].enabled = pointsFillBar.fillAmount == 1;
         }
     }
-    private int points;
 
+    /// <summary>
+    /// Devuelve si el juego esta pausado.
+    /// Cuando es pausado, se muestra el panel de Pausa y se para el juego
+    /// </summary>
     public bool Pause
     {
         get { return pause; }
@@ -67,8 +81,7 @@ public class LevelManager : MonoBehaviour
             {
                 pause = true;
                 Time.timeScale = 0.0f;
-                PauseUI pauseUI = Instantiate(pauseUIPrefab, canvas.transform);
-                pauseUI.Init(this);
+                Instantiate(pauseUIPrefab).Init(this);
             }
             else
             {
@@ -80,76 +93,72 @@ public class LevelManager : MonoBehaviour
     }
     private bool pause;
 
+    /// <summary>
+    /// Delay necesario para que no haga input el usuario cuando sale de la pausa
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator ResumeDelay()
     {
-        yield return new WaitForSeconds(1.0f);
+        yield return new WaitForSeconds(0.1f);
         pause = false;
     }
 
+    #endregion Properties
 
     /// <summary>
-    /// Cuando es modificado activa/desactiva la zona de alerta
-    /// TODO: LLEVARLO A BOARD
+    /// Número de pelotas de las que se dispone
     /// </summary>
-    public bool Alert
-    {
-        get { return alertZoneRenderer.enabled; }
-        set
-        {
-            alertZoneRenderer.enabled = value;
+    public uint CurrentNumBalls { get; set; }
 
-            if (value)
-            {
-                alertRoutine = AlertRoutine();
-                StartCoroutine(alertRoutine);
-            }
-            else
-            {
-                if (alertRoutine != null)
-                    StopCoroutine(alertRoutine);
-            }
-        }
-    }
-    private IEnumerator alertRoutine;
+    /// <summary>
+    /// Puntuación para obtener 3 estrellas
+    /// </summary>
+    private uint maxScore;
 
+    /// <summary>
+    /// Lista de pelotas en el juego
+    /// </summary>
+    public List<Ball> Balls { get; set; }
 
-    public int CurrentNumBalls { get; set; }
-
-    private int maxScore;
     /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
     /// </summary>
     private void Start()
     {
-        CurrentNumBalls = int.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.MapLevel].Split(' ', ',')[1]);
+        CurrentNumBalls = uint.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.MapLevel].Split(' ', ',')[1]);        //Obtiene el numero de pelotas iniciales
         Points = 0;
+        pause = false;
 
-        aimController.Init(this, ballSpawner, ballVelocity);
-        ballSpawner.Init(ballPrefab, ballSpawnTickRate);
+        aimController.Init(this, ballSpawner, ballVelocity, maxTimeScale);
+        ballSpawner.Init(this, ballPrefab, ballSpawnTickRate);
         deathZone.Init(this, ballSink, ballToSinkTime);
         ballSink.Init(this);
-        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel]);
+        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel], tilePoints, alertDuration);
 
-        maxScore = board.PendingTiles * 50;
-        Pause = false;
-        Alert = board.DetectAlert();
+        //El maxScore es en funcion del número de tiles
+        maxScore = board.PendingTiles * maxScoreMultiplier;
     }
 
     /// <summary>
     /// Detecta el input de "return"
+    /// Pausa el juego
     /// </summary>
     private void Update()
     {
-        if (!Pause && Input.GetKeyDown(KeyCode.Escape))     
+        if (!Pause && Input.GetKeyDown(KeyCode.Escape))
             Pause = true;
     }
 
     /// <summary>
+    /// Activa el botón de skip
     /// Informa a los componentes subscritos
     /// Es llamado cuando se inicia el disparo
     /// </summary>
     public void RoundStart()
     {
+        skipButton.gameObject.SetActive(true);
+        powerUpsPanel.gameObject.SetActive(false);
+
         if (OnRoundStartCallback != null)
             OnRoundStartCallback.Invoke();
     }
@@ -157,15 +166,22 @@ public class LevelManager : MonoBehaviour
     /// <summary>
     /// Establece la posición del ballSpawner a a la del ballSink e informa a todos los subscritos que ha acabado la ronda
     /// Es llamado cuando todas las pelotas han caido
+    /// Desactiva el botón de skip
     /// </summary>
     public void RoundEnd()
     {
         ballSpawner.transform.position = ballSink.transform.position;
+        skipButton.gameObject.SetActive(false);
+        powerUpsPanel.gameObject.SetActive(true);
 
         if (OnRoundEndCallback != null)
             OnRoundEndCallback.Invoke();
     }
 
+    /// <summary>
+    /// Es llamado cuando acaba la partida
+    /// Instancia el panel de GameOver y pausa el juego
+    /// </summary>
     public void LevelEnd()
     {
         int stars = 0;
@@ -175,22 +191,39 @@ public class LevelManager : MonoBehaviour
                 stars++;
         }
 
-        GameOverUI gameOverUI = Instantiate(gameOverUIPrefab, canvas.transform);
-        gameOverUI.Init(board.PendingTiles == 0, stars);
+        Instantiate(gameOverUIPrefab).Init(board.PendingTiles == 0, stars);
         pause = true;
     }
 
-    private IEnumerator AlertRoutine()
+    /// <summary>
+    /// Para la generación de pelotas
+    /// Empieza a mover todas las pelotas hacia el sink
+    /// </summary>
+    public void MoveAllBallsToSink()
     {
-        while (true)
+        ballSpawner.StopSpawn();
+        skipButton.gameObject.SetActive(false);
+
+        foreach (Ball ball in Balls)
         {
-            UtilitiesManager.Instance.FadeInFadeOut(alertZoneRenderer, alertDuration / 2);
-            yield return new WaitForSeconds(alertDuration);
+            ball.Stop();
+            ball.StopMoveRoutine();
+            ball.SetTrigger();
+            ball.MoveTo(ballSink.transform.position, skipTime, ballSink.OnBallArrived);
         }
+
     }
 
-    public void AllBallsGoToSink()
+    #region PowerUps
+
+    /// <summary>
+    /// PowerUp: Elimina la fila inferior
+    /// </summary>
+    public void DestroyRow()
     {
-
+        board.DestroyRow();
     }
+    #endregion PowerUps
+
+
 }

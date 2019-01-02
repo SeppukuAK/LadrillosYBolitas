@@ -10,19 +10,19 @@ using System.Collections;
 public class AimController : MonoBehaviour
 {
     [SerializeField] private float heightOffset;
-
     [SerializeField] private float fastImageDuration;
     [SerializeField] private Image fastImage;
 
-    //Own Components
-    private LineRenderer lineRenderer;
-
-    //References
-    private LevelManager _levelManager;
-    private BallSpawner _ballSpawner;
-
     private bool canShoot;
     private float _ballVelocity;
+    private uint _maxTimeScale;
+
+    //Own References
+    private LineRenderer lineRenderer;
+
+    //Other References
+    private LevelManager _levelManager;
+    private BallSpawner _ballSpawner;
 
     /// <summary>
     /// Obtiene referencias
@@ -30,13 +30,19 @@ public class AimController : MonoBehaviour
     private void Awake()
     {
         lineRenderer = GetComponent<LineRenderer>();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (lineRenderer == null)
+            Debug.LogError("LineRenderer no asociado");
+#endif
     }
 
-    public void Init(LevelManager levelManager, BallSpawner ballSpawner, float ballVelocity)
+    public void Init(LevelManager levelManager, BallSpawner ballSpawner, float ballVelocity, uint maxTimeScale)
     {
         _levelManager = levelManager;
         _ballSpawner = ballSpawner;
         _ballVelocity = ballVelocity;
+        _maxTimeScale = maxTimeScale;
 
         lineRenderer.positionCount = 0;
         levelManager.OnRoundStartCallback += OnRoundStart;
@@ -48,7 +54,7 @@ public class AimController : MonoBehaviour
     /// <summary>
     /// Anula el poder disparar
     /// </summary>
-    public void OnRoundStart()
+    private void OnRoundStart()
     {
         canShoot = false;
     }
@@ -56,7 +62,7 @@ public class AimController : MonoBehaviour
     /// <summary>
     /// Permite volver a disparar
     /// </summary>
-    public void OnRoundEnd()
+    private void OnRoundEnd()
     {
         canShoot = true;
         Time.timeScale = 1.0f;
@@ -68,7 +74,7 @@ public class AimController : MonoBehaviour
     /// </summary>
 	private void Update()
     {
-        if (!_levelManager.Pause )
+        if (!_levelManager.Pause)
         {
             if (canShoot)
             {
@@ -77,8 +83,8 @@ public class AimController : MonoBehaviour
                     Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     mousePos.z = 0;
 
-                    //Comprobación de si ha pulsado dentro
-                    if (Mathf.Abs(mousePos.y) <= Board.BOARDHEIGHT / 2.0f && Mathf.Abs(mousePos.x) <= Board.BOARDWIDTH / 2.0f)
+                    //Teniendo en cuenta el Offset
+                    if (OnBoard(mousePos))
                     {
                         //Comprobar si no pulsa demasiado cerca
                         _levelManager.RoundStart();
@@ -149,15 +155,25 @@ public class AimController : MonoBehaviour
             }
             else
             {
-                if (Input.GetMouseButtonUp(0) && Time.timeScale <10f)
+                if (Input.GetMouseButtonUp(0) && Time.timeScale < _maxTimeScale && OnBoard(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
                 {
                     Time.timeScale++;
-                    
+
                     StartCoroutine(FadeInFadeOut());
                 }
             }
         }
-     
+
+    }
+
+    /// <summary>
+    /// Devuelve si la posición está dentro del tablero
+    /// </summary>
+    /// <returns></returns>
+    private bool OnBoard(Vector2 pos)
+    {
+        //Comprobación de si ha pulsado dentro y con un offset
+        return Mathf.Abs(pos.y) <= Board.BOARD_HEIGHT / 2.0f && Mathf.Abs(pos.x) <= Board.BOARD_WIDTH / 2.0f && pos.y > -(Board.BOARD_HEIGHT / 2.0f - heightOffset);
     }
 
     private IEnumerator FadeInFadeOut()

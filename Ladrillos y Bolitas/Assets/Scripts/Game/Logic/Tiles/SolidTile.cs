@@ -1,24 +1,25 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Tile que puede ser destruido
+/// </summary>
 public class SolidTile : Tile
 {
-    private Text healthText;
     private System.Action<Tile> _onDestroyCallBack;
+    private Text healthText;
 
     /// <summary>
     /// Cuando es modificado se actualiza el texto
     /// </summary>
-    protected int health
+    protected uint health
     {
-        get { return _health; }
+        get { return uint.Parse(healthText.text); }
         set
         {
-            _health = value;
-            healthText.text = _health.ToString();
+            healthText.text = value.ToString();
         }
     }
-    private int _health;
 
     /// <summary>
     /// Cuando es modificado se renderiza o no
@@ -28,7 +29,7 @@ public class SolidTile : Tile
         set
         {
             base.visible = value;
-            healthText.enabled = _visible;
+            healthText.enabled = value;
         }
     }
 
@@ -39,17 +40,23 @@ public class SolidTile : Tile
     {
         base.Awake();
         healthText = GetComponentInChildren<Text>();
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        if (healthText == null)
+            Debug.LogError("Text no asociado");
+#endif
     }
 
     /// <summary>
     /// Inicializa el Tile
+    /// Establece su posicion y guarda la vida y callback
     /// </summary>
     /// <param name="health"></param>
     /// <param name="onDestroyCallBack"></param>
     public override void Init(int value, System.Action<Tile> onDestroyCallBack = null)
     {
         base.Init(value, onDestroyCallBack);
-        health = value;
+        health = (uint)value;
         _onDestroyCallBack = onDestroyCallBack;
     }
 
@@ -61,11 +68,8 @@ public class SolidTile : Tile
     {
         health--;
         if (health == 0)
-            if (_onDestroyCallBack != null)
-            {
-                _onDestroyCallBack(this);
-                Destroy(gameObject);
-            }
+            _onDestroyCallBack(this);
+
     }
 
 }

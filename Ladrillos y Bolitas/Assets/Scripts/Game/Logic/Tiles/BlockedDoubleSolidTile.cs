@@ -5,5 +5,4 @@
 public class BlockedDoubleSolidTile : DoubleSolidTile {
 
     public override bool CanFall() { return false; }
-
 }
