@@ -10,7 +10,6 @@ Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtua
 -Sprites tienen que ser 60x60
 
 -UnityAds. Para monetizar el juego Ver anuncios proporciona gemas. 
--Ser amigable en la salida de la aplicación
 
 Optativo:
 
@@ -25,7 +24,7 @@ TODO: Duda: Utilizar las opciones del placeholder???
 -Boton de vuelta a casa
 -Boton de acelerar velocidad
 -NO DETECTAR EL INPUT AL TOCAR EL CANVAS
-
+-Limpieza de todo: UI
 
 Entrega: mirar
 

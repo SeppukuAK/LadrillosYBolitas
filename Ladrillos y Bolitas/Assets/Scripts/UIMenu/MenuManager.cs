@@ -1,16 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class MenuManager : MonoBehaviour {
 
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		
-	}
+    [Header("UI References")]
+    [SerializeField] private Canvas canvas;
+    [SerializeField] private ExitUI exitUIPrefab;
+
+    public bool Exit
+    {
+        get { return exit; }
+        set
+        {
+            exit = value;
+
+            if (exit)
+                Instantiate(exitUIPrefab, canvas.transform).Init(this);
+
+        }
+    }
+    private bool exit;
+
+    void Update()
+    {
+        if (!Exit && Input.GetKeyDown(KeyCode.Escape))
+            Exit = true;
+
+
+    }
 }

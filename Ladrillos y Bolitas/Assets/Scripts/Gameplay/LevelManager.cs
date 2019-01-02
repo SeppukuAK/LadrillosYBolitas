@@ -136,6 +136,15 @@ public class LevelManager : MonoBehaviour
     }
 
     /// <summary>
+    /// Detecta el input de "return"
+    /// </summary>
+    private void Update()
+    {
+        if (!Pause && Input.GetKeyDown(KeyCode.Escape))     
+            Pause = true;
+    }
+
+    /// <summary>
     /// Informa a los componentes subscritos
     /// Es llamado cuando se inicia el disparo
     /// </summary>
