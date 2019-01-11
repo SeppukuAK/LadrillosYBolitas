@@ -8,16 +8,18 @@ public class SaveDataGame
 {
     public uint TotalStars; //Puntuacion total
     public uint Gems;  //Gemas
+    public uint[] PowerUps;  //PowerUps
 
     //Guardamos tipos básicos porque no podemos convertir nuestras propias estructuras (ni de Unity) a binario
     public uint[] Level;
     public uint[] Stars;
     public bool[] Blocked;
 
-    public SaveDataGame(uint totalStars, uint gems, List<LevelData> LevelData)
+    public SaveDataGame(uint totalStars, uint gems,uint[] powerUps, List<LevelData> LevelData)
     {
         TotalStars = totalStars;
         Gems = gems;
+        PowerUps = powerUps;
 
         Level = new uint[LevelData.Count];
         Stars = new uint[LevelData.Count];

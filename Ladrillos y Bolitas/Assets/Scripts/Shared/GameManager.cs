@@ -15,9 +15,11 @@ public class LevelData
 /// <summary>
 /// Clase persistente entre escenas
 /// </summary>
-public class GameManager : MonoBehaviour {
-
+public class GameManager : MonoBehaviour
+{
     public static GameManager Instance;
+
+    public enum PowerUpType { DestroyRow };
 
     /// <summary>
     /// Fichero con la información de las bolas disponibles en cada nivel
@@ -29,15 +31,23 @@ public class GameManager : MonoBehaviour {
     /// </summary>
     public TextAsset[] MapData;
 
-    public uint TotalStars{ get; set; }
-    public uint Gems { get; set; }
+    public uint Gems
+    {
+        get { return gems; }
+        set
+        {
+            gems = value;
+            SaveData();
+        }
+    }
+    private uint gems;
+
+    public uint TotalStars { get; set; }
     public List<LevelData> LevelData;
 
-    [Header("Game Attributes")]
-    public uint AdReward;
+    public uint[] PowerUps { get; set; }
 
-    [Header("Test Attributes")]
-    public uint MapLevel;//Mapa con la informacion del juego
+    public uint SelectedMapLevel { get; set; }
 
     private void Awake()
     {
@@ -52,27 +62,21 @@ public class GameManager : MonoBehaviour {
             Destroy(gameObject);
     }
 
-    private void Update()
+    /// <summary>
+    /// Establece el número de powerUps de los que se dispone de un tipo.
+    /// Guarda el progreso cuando se establece
+    /// </summary>
+    /// <param name="powerUpType"></param>
+    /// <param name="value"></param>
+    public void SetNumPowerUp(PowerUpType powerUpType, uint value)
     {
-        if (Input.GetKeyDown(KeyCode.A))
-            SaveData();
-
-        if (Input.GetKeyDown(KeyCode.B))
-            SaveSystem.DeleteData();
-
-
-        if (Input.GetKeyDown(KeyCode.S))
-            LoadData();
-
-        if (Input.GetKeyDown(KeyCode.D))
-            Gems++;
-        if (Input.GetKeyDown(KeyCode.W))
-            ResetSaveData();
+        PowerUps[(int)powerUpType] = value;
+        SaveData();
     }
 
     public void SaveData()
     {
-        SaveSystem.SaveGameData(TotalStars, Gems, LevelData);
+        SaveSystem.SaveGameData(TotalStars, gems, PowerUps, LevelData);
     }
 
     public void LoadData()
@@ -81,16 +85,15 @@ public class GameManager : MonoBehaviour {
 
         //Crea nuevo archivo de guardado
         if (saveDataGame == null)
-        {
             ResetSaveData();
-        }
 
         //Carga el fichero existente
         else
         {
             TotalStars = saveDataGame.TotalStars;
-            Gems = saveDataGame.Gems;
-
+            gems = saveDataGame.Gems;
+            PowerUps = saveDataGame.PowerUps;
+            //TODO: Comprobar que se guardan bien los powerUps
             LevelData = new List<LevelData>();
 
             for (int i = 0; i < MapData.Length; i++)
@@ -105,10 +108,16 @@ public class GameManager : MonoBehaviour {
         }
     }
 
-    private void ResetSaveData()
+    public void ResetSaveData()
     {
         TotalStars = 0;
-        Gems = 0;
+        gems = 0;
+
+        uint numPowerUps = (uint)System.Enum.GetValues(typeof(PowerUpType)).Length;
+        PowerUps = new uint[numPowerUps];
+        for (int i = 0; i < PowerUps.Length; i++)
+            PowerUps[i] = 2;
+
         LevelData = new List<LevelData>();
 
         for (int i = 0; i < MapData.Length; i++)

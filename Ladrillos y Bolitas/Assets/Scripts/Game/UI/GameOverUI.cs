@@ -20,9 +20,17 @@ public class GameOverUI : MonoBehaviour
     /// <param name="stars"></param>
     public void Init(bool win, uint stars)
     {
-        levelText.text = "Level " + (GameManager.Instance.MapLevel + 1).ToString();
+        levelText.text = "Level " + (GameManager.Instance.SelectedMapLevel + 1).ToString();
         if (win)
         {
+            //Guardamos los datos
+            if (win)
+            {
+                GameManager.Instance.LevelData[(int)GameManager.Instance.SelectedMapLevel + 1].Blocked = false;
+                GameManager.Instance.LevelData[(int)GameManager.Instance.SelectedMapLevel].Stars = stars;
+                GameManager.Instance.SaveData();
+            }
+
             statusText.text = "Win";
 
             for (int i = 0; i < stars; i++)
@@ -40,8 +48,7 @@ public class GameOverUI : MonoBehaviour
     /// </summary>
     public void NextLevel()
     {
-        GameManager.Instance.SaveData();
-        GameManager.Instance.MapLevel++;
+        GameManager.Instance.SelectedMapLevel++;
         MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
     }
 

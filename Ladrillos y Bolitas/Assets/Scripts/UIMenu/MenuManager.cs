@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
@@ -12,6 +11,10 @@ public class MenuManager : MonoBehaviour {
 
     [SerializeField] private GridLayoutGroup gridLayoutGroup;
     [SerializeField] private RectTransform panelTransform;
+    [SerializeField] private ShopManager shopPrefab;
+    [SerializeField] private DeleteUI deleteUIPrefab;
+
+    [SerializeField] private Text gemsText;
 
     [SerializeField] private float offset;
 
@@ -33,7 +36,6 @@ public class MenuManager : MonoBehaviour {
     
     private void Start()
     {
- 
         cellList = new List<CellUI>();
 
         for (int i = 0; i < GameManager.Instance.MapData.Length; i++)
@@ -44,6 +46,7 @@ public class MenuManager : MonoBehaviour {
         }
         SetPanelSize();
 
+        UpdateUI();
     }
 
     void Update()
@@ -67,4 +70,29 @@ public class MenuManager : MonoBehaviour {
         panelTransform.offsetMin = new Vector2(panelTransform.offsetMin.x, -tamañoPanel);
         panelTransform.offsetMax = new Vector2(panelTransform.offsetMax.x, 0);
     }
+
+    /// <summary>
+    /// Cuando el botón de la tienda es pulsado, se spawnea el canvas
+    /// </summary>
+    public void ShowShop()
+    {
+        Instantiate(shopPrefab).SetCallbackOnDestroy(UpdateUI);
+    }
+
+    /// <summary>
+    /// Actualiza el UI a los valores actuales
+    /// </summary>
+    private void UpdateUI()
+    {
+        gemsText.text = GameManager.Instance.Gems.ToString();
+    }
+
+    /// <summary>
+    /// Cuando el botón de ajustes es pulsado, se spawnea el panel de borrado de datos
+    /// </summary>
+    public void ShowDeletePanel()
+    {
+        Instantiate(deleteUIPrefab);
+    }
+
 }

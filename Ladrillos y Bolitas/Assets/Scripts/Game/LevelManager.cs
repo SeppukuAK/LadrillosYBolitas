@@ -37,6 +37,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private AimController aimController;
     [SerializeField] private PauseUI pauseUIPrefab;
     [SerializeField] private GameOverUI gameOverUIPrefab;
+    [SerializeField] private ShopManager shopPrefab;
 
     [Header("UI References")]
     [SerializeField] private Image pointsFillBar;
@@ -44,6 +45,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private Image[] starsImages;
     [SerializeField] private Button skipButton;
     [SerializeField] private RectTransform powerUpsPanel;
+    [SerializeField] private Text[] powerUpsText;
 
     #endregion Inspector Attributes
 
@@ -126,19 +128,20 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        CurrentNumBalls = uint.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.MapLevel].Split(' ', ',')[1]);        //Obtiene el numero de pelotas iniciales
+        CurrentNumBalls = uint.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.SelectedMapLevel].Split(' ', ',')[1]);        //Obtiene el numero de pelotas iniciales
         Points = 0;
         pause = false;
-       
 
         aimController.Init(this, ballSpawner, ballVelocity, maxTimeScale);
         ballSpawner.Init(this, ballPrefab, ballSpawnTickRate);
         deathZone.Init(this, ballSink, ballToSinkTime);
         ballSink.Init(this);
-        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.MapLevel], tilePoints, alertDuration);
+        board.Init(this, GameManager.Instance.MapData[GameManager.Instance.SelectedMapLevel], tilePoints, alertDuration);
 
         //El maxScore es en funcion del número de tiles
         maxScore = board.PendingTiles * maxScoreMultiplier;
+
+        UpdatePowerUpText();
     }
 
     /// <summary>
@@ -195,16 +198,7 @@ public class LevelManager : MonoBehaviour
                 stars++;
         }
 
-        win = (board.PendingTiles == 0);
-
-
-        //Guardamos los datos
-        if (win)
-        {
-            GameManager.Instance.LevelData[(int)GameManager.Instance.MapLevel + 1].Blocked = false;
-            GameManager.Instance.LevelData[(int)GameManager.Instance.MapLevel].Stars = stars;
-            GameManager.Instance.SaveData();
-        }
+        win = board.PendingTiles == 0;
 
         Instantiate(gameOverUIPrefab).Init(win, stars);
         pause = true;
@@ -229,15 +223,44 @@ public class LevelManager : MonoBehaviour
 
     }
 
+    /// <summary>
+    /// Cuando el botón de la tienda es pulsado, se spawnea el canvas
+    /// </summary>
+    public void ShowShop()
+    {
+        Instantiate(shopPrefab).SetCallbackOnDestroy(UpdatePowerUpText);
+        pause = true;
+    }
+
+    /// <summary>
+    /// Actualiza el texto de cantidad de todos los powerUps al valor actual
+    /// </summary>
+    private void UpdatePowerUpText()
+    {
+        for (int i = 0; i < powerUpsText.Length; i++)
+            powerUpsText[i].text = GameManager.Instance.PowerUps[i].ToString();
+
+        pause = false;
+    }
+
     #region PowerUps
 
     /// <summary>
     /// PowerUp: Elimina la fila inferior
+    /// Comprueba si se dispone de PowerUp y si no, se spawnea la tienda
     /// </summary>
     public void DestroyRow()
     {
-        board.DestroyRow();
+        if (GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow] > 0)
+        {
+            GameManager.Instance.SetNumPowerUp(GameManager.PowerUpType.DestroyRow, GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow] - 1);
+            UpdatePowerUpText();
+            board.DestroyRow();
+        }
+        else
+            ShowShop();
     }
+
     #endregion PowerUps
 
 

@@ -17,7 +17,7 @@ public static class SaveSystem
     /// <param name="totalStars"></param>
     /// <param name="gems"></param>
     /// <param name="levelData"></param>
-    public static void SaveGameData(uint totalStars, uint gems, List<LevelData> levelData)
+    public static void SaveGameData(uint totalStars, uint gems, uint[] powerUps, List<LevelData> levelData)
     {
         //Creamos un BinaryFormatter
         BinaryFormatter formatter = new BinaryFormatter();
@@ -25,7 +25,7 @@ public static class SaveSystem
         //Para leer /escribir en el archivo
         FileStream stream = new FileStream(path, FileMode.Create);
 
-        SaveDataGame saveDataGame = new SaveDataGame(totalStars, gems, levelData);
+        SaveDataGame saveDataGame = new SaveDataGame(totalStars, gems, powerUps, levelData);
 
         //Convierte la clase a binario
         formatter.Serialize(stream, saveDataGame);

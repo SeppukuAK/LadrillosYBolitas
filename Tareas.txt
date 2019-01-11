@@ -2,13 +2,7 @@
 
 Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtual
 
--Se mantiene el progreso entre sesiones. Dificil de romper y acceder
--Moneda virtual con la que comprar power-ups durante la partida (antes de tirar) en los botones inferiores
-
--Un tipo de potenciador.(Info de ello en el documento)
 -Sprites tienen que ser 60x60
-
--UnityAds. Para monetizar el juego Ver anuncios proporciona gemas. 
 
 Optativo:
 
@@ -17,12 +11,18 @@ Optativo:
 
 Cosas que se me ocurren:
 TODO: Duda: Utilizar las opciones del placeholder???
+-Mas potenciadores.(Info de ello en el documento)
 -Mas bloques especiales
--panel de acabar partida: rupias
 -Limpieza de todo: UI
+-GameManager limpiar
 
 Limpiar todo el aimController
 Las bolas se atascan mucho
+
+Cosas que importan bastante poco:
+-Sonido
+-Revisar grafica
+-Panel de ayuda de powerUps
 
 Entrega: mirar
 
