@@ -13,6 +13,11 @@ public class BallSink : MonoBehaviour
     /// </summary>
     private uint roundBalls;
 
+    /// <summary>
+    /// Número de pelotas que han llegado este turno
+    /// </summary>
+    private uint ballsThisRound;
+
     //Own References
     private Text labelText;
     private SpriteRenderer ballSprite;
@@ -59,6 +64,7 @@ public class BallSink : MonoBehaviour
     {
         roundBalls = _levelManager.CurrentNumBalls;
         labelText.text = "x0";
+        ballsThisRound = 0;
         Hide();
     }
 
@@ -98,8 +104,8 @@ public class BallSink : MonoBehaviour
     {
         _levelManager.Balls.Remove(ball);
         Destroy(ball.gameObject);
-
-        labelText.text = "x" + (roundBalls - _levelManager.Balls.Count).ToString();
+        ballsThisRound++;
+        labelText.text = "x" + (ballsThisRound + _levelManager.CurrentNumBalls - roundBalls).ToString();
 
         if (_levelManager.Balls.Count == 0)
             _levelManager.RoundEnd();

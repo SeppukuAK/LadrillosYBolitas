@@ -8,18 +8,20 @@ public class SolidTile : Tile
 {
     private System.Action<Tile> _onDestroyCallBack;
     private Text healthText;
-
+    
     /// <summary>
     /// Cuando es modificado se actualiza el texto
     /// </summary>
-    protected uint health
+    public override uint Value
     {
-        get { return uint.Parse(healthText.text); }
+        get { return value; }
         set
         {
+            this.value = value;
             healthText.text = value.ToString();
         }
     }
+    protected uint value;
 
     /// <summary>
     /// Cuando es modificado se renderiza o no
@@ -56,7 +58,6 @@ public class SolidTile : Tile
     public override void Init(int value, System.Action<Tile> onDestroyCallBack = null)
     {
         base.Init(value, onDestroyCallBack);
-        health = (uint)value;
         _onDestroyCallBack = onDestroyCallBack;
     }
 
@@ -66,8 +67,8 @@ public class SolidTile : Tile
     /// <param name="collision"></param>
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        health--;
-        if (health == 0)
+        Value--;
+        if (Value == 0)
             _onDestroyCallBack(this);
 
     }

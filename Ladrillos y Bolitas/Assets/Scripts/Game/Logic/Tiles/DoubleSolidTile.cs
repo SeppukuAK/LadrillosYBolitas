@@ -14,6 +14,6 @@ public class DoubleSolidTile : SolidTile {
     public override void Init(int value, System.Action<Tile> onDestroyCallBack = null)
     {
         base.Init(value, onDestroyCallBack);
-        health *= 2;
+        Value *= 2;
     }
 }

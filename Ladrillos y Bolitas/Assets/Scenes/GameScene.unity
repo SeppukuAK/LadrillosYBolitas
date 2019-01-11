@@ -2292,9 +2292,9 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 114319672455646876, guid: 19c1adb3410a2a64bb8ed0dbc7fdfade, type: 2}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 114712169379757982, guid: aeddcdbb4711673409e083a86246297f, type: 2}
+  - {fileID: 114929770202060614, guid: dce6af8429522ae47b0332864306f1f6, type: 2}
+  - {fileID: 114638804803026538, guid: 244409cb5feb7e34ba0cf96c9d11afe0, type: 2}
   - {fileID: 0}
   alertZoneRenderer: {fileID: 125726519}
 --- !u!1 &1250787163

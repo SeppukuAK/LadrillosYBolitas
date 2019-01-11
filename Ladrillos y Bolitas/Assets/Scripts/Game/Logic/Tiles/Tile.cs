@@ -9,10 +9,13 @@ public class Tile : MonoBehaviour
     //Propiedades especificas del tile
     public virtual bool MustBeDestroyed() { return true; }
     public virtual bool CanFall() { return true; }
+    public virtual bool Trigger() { return false; }
 
     //Posicion
     public uint X { get; set; }
     public uint Y { get; set; }
+
+    public virtual uint Value { get; set; }
 
     protected SpriteRenderer spriteRenderer;
 
@@ -50,6 +53,7 @@ public class Tile : MonoBehaviour
     public virtual void Init(int value, System.Action<Tile> onDestroyCallBack = null)
     {
         SetPosition(new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.y));
+        Value = (uint)value;
     }
 
     /// <summary>

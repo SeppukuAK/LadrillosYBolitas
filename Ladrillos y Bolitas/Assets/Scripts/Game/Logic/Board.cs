@@ -126,6 +126,9 @@ public class Board : MonoBehaviour
                             _board[i, j].Init(healthMap[height - i - 1, j], TileDestroyed);
                             PendingTiles++;
                         }
+                        else if (tile.Trigger())                       
+                            _board[i, j].Init(healthMap[height - i - 1, j], TileTriggered);
+                        
                         else
                             _board[i, j].Init(healthMap[height - i - 1, j]);
                     }
@@ -183,6 +186,18 @@ public class Board : MonoBehaviour
         tilesDestroyedThisRound++;
         _levelManager.Points += tilesDestroyedThisRound * _tilePoints;
 
+        Destroy(tile.gameObject);
+    }
+
+    /// <summary>
+    /// Es llamado cuando un tile de tipo trigger es activado
+    /// Lo elimina del tablero y aumenta el numero de bolas
+    /// </summary>
+    /// <param name="tile"></param>
+    public void TileTriggered(Tile tile)
+    {
+        _board[tile.Y, tile.X] = null;
+        _levelManager.CurrentNumBalls += tile.Value;
         Destroy(tile.gameObject);
     }
 
