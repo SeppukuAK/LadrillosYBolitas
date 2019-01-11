@@ -24,6 +24,7 @@ public class AimController : MonoBehaviour
     private LevelManager _levelManager;
     private BallSpawner _ballSpawner;
 
+
     /// <summary>
     /// Obtiene referencias
     /// </summary>
@@ -37,6 +38,13 @@ public class AimController : MonoBehaviour
 #endif
     }
 
+    /// <summary>
+    /// Inicializa el spawner, se suscribe a los eventos inicio de ronda y fin de ronda 
+    /// </summary>
+    /// <param name="levelManager"></param>
+    /// <param name="ballSpawner"></param>
+    /// <param name="ballVelocity"></param>
+    /// <param name="maxTimeScale"></param>
     public void Init(LevelManager levelManager, BallSpawner ballSpawner, float ballVelocity, uint maxTimeScale)
     {
         _levelManager = levelManager;
@@ -47,6 +55,7 @@ public class AimController : MonoBehaviour
         lineRenderer.positionCount = 0;
         levelManager.OnRoundStartCallback += OnRoundStart;
         levelManager.OnRoundEndCallback += OnRoundEnd;
+
 
         canShoot = true;
     }
@@ -76,94 +85,147 @@ public class AimController : MonoBehaviour
     {
         if (!_levelManager.Pause)
         {
+#if UNITY_EDITOR
+            //Obtenemos la posición del ratón
+            Vector3 mousePos;
+            mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0;
+#endif
+            //Comprobamos si se puede disparar
             if (canShoot)
             {
-                if (Input.GetMouseButtonUp(0))
+#if UNITY_EDITOR
+                //Comprobamos el input dentro del tablero teniendo en cuenta el Offset
+                if (OnBoard(mousePos))
                 {
-                    Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                    mousePos.z = 0;
-
-                    //Teniendo en cuenta el Offset
-                    if (OnBoard(mousePos))
+                    //Se detecta cuando se hace click
+                    if (Input.GetMouseButtonDown(0))
                     {
-                        //Comprobar si no pulsa demasiado cerca
-                        _levelManager.RoundStart();
-
-                        Vector2 dir = (mousePos - _ballSpawner.transform.position).normalized;
-                        _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, _ballVelocity * dir);
-                    }
-                }
-
-                //Solo si hay un dedo hago cosas
-                if (Input.touchCount == 1)
-                {
-                    //Store the first touch detected.
-                    Touch myTouch = Input.touches[0];
-
-                    if (myTouch.phase == TouchPhase.Began)
-                    {
+                        lineRenderer.enabled = true;
                         lineRenderer.positionCount = 2;//Se establece el número de vertices
                         lineRenderer.SetPosition(0, _ballSpawner.transform.position); //Posición del primer vert en el Spawner
 
-                        Vector3 pos = Camera.main.ScreenToWorldPoint(myTouch.position);
-                        pos.z = 0;
-                        lineRenderer.SetPosition(1, pos); //Posición donde ha tocado el usuario
+                        lineRenderer.SetPosition(1, mousePos); //Posición donde ha tocado el usuario
                     }
-
-                    //Check if the phase of that touch equals Began
-                    else if (myTouch.phase == TouchPhase.Moved)
+                    //Se detecta cuando se mantiene el ratón
+                    else if (Input.GetMouseButton(0))
                     {
-                        Vector3 pos = Camera.main.ScreenToWorldPoint(myTouch.position);
-                        pos.z = 0;
-                        lineRenderer.SetPosition(1, pos); //Posición donde ha tocado el usuario
-
-                        RaycastHit hit;
-                        ////Creación del rayo
-                        //Ray ray = new Ray(_ballSpawner.transform.position, myTouch.position);
-                        //if(Physics.Raycast(ray, out hit, 10))
-                        //{
-                        //    if(hit.collider.name == "Top" || hit.collider.name == "Bot" || hit.collider.name == "Left" || hit.collider.name == "Right")
-                        //    {
-                        //        lineRenderer.SetPosition(2, hit.transform.position); //Posición del primer vert en el Spawner
-                        //        lineRenderer.SetPosition(3, ); //Posición del primer vert en el Spawner
-
-                        //    }
-                        //}
-
-                        //If so, set touchOrigin to the position of that touch
+                        lineRenderer.enabled = true;
+                        lineRenderer.SetPosition(1, mousePos); 
                     }
-
-                    //Disparo si soltamos
-                    else if (myTouch.phase == TouchPhase.Ended)
+                    //Se detecta cuando se suelta el ratón
+                    if (Input.GetMouseButtonUp(0))
                     {
-                        lineRenderer.positionCount = 0;//Se establece el número de vertices
+                        lineRenderer.positionCount = 0;//Se resetea a 0 el número de vértices
+
+                        //Comprobar si no pulsa demasiado cerca
                         _levelManager.RoundStart();
-                        Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                        mousePos.z = 0;
 
+                        //Se spawnean las bolas
                         Vector2 dir = (mousePos - _ballSpawner.transform.position).normalized;
                         _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, _ballVelocity * dir);
 
                     }
                 }
-
-                //Si hay más de 2 dedos o ninguno, paro el disparo
+                //Caso en el que el ratón se encuentra fuera del board
                 else
                 {
-
+                    if (Input.GetMouseButton(0))
+                        lineRenderer.enabled = false;
                 }
+#endif
+#if UNITY_ANDROID 
+                //Detectamos que solo se está pulsando con un dedo
+                if (Input.touchCount == 1)
+                {
+                    Touch myTouch;
+                    myTouch = Input.touches[0];
+
+                    //Se obtiene la posición del dedo
+                    Vector3 pos = Camera.main.ScreenToWorldPoint(myTouch.position);
+                    pos.z = 0;
+
+                    //Comprobamos el input dentro del tablero teniendo en cuenta el Offset
+                    if (OnBoard(pos))
+                    {
+                        //Se detecta cuándo se hace tap
+                        if (myTouch.phase == TouchPhase.Began)
+                        {
+                            lineRenderer.enabled = true;
+                            lineRenderer.positionCount = 2;//Se establece el número de vertices
+                            lineRenderer.SetPosition(0, _ballSpawner.transform.position); //Posición del primer vert en el Spawner
+
+                            lineRenderer.SetPosition(1, pos); //Posición donde ha tocado el usuario
+                        }
+
+                        //Se detecta cuando se mantiene el dedo
+                        else if (myTouch.phase == TouchPhase.Moved)
+                        {
+                            lineRenderer.enabled = true;
+                            lineRenderer.SetPosition(1, pos); 
+                        }
+                        //Caso en el que se hay un dedo pulsando la pantalla pero no se mueve
+                        else if (myTouch.phase == TouchPhase.Stationary)
+                            lineRenderer.enabled = true;
+
+                        //Se detecta cuando se suelta el dedo
+                        else if (myTouch.phase == TouchPhase.Ended && lineRenderer.enabled)
+                        {
+                            lineRenderer.positionCount = 0;//Se resetea a 0 el número de vértices
+                            _levelManager.RoundStart();
+
+                            Vector2 dir = (pos - _ballSpawner.transform.position).normalized;
+                            _ballSpawner.SpawnBalls(_levelManager.CurrentNumBalls, _ballVelocity * dir);
+
+                        }
+                    }
+                    //Caso en el que el dedo se encuentra fuera del board
+                    else
+                    {
+                        if (myTouch.phase == TouchPhase.Moved)
+                            lineRenderer.enabled = false;
+                    }
+                }
+
+                //Caso en el que hay más de 2 dedos, se desactiva el lineRenderer
+                else if (Input.touchCount > 1)
+                    lineRenderer.enabled = false;
+
+#endif
             }
+
+            //Caso en el que no se puede disparar
             else
             {
-                if (Input.GetMouseButtonUp(0) && Time.timeScale < _maxTimeScale && OnBoard(Camera.main.ScreenToWorldPoint(Input.mousePosition)))
+#if UNITY_EDITOR
+                //Cuando se hace click, se duplica la velocidad del motor
+                if (Input.GetMouseButtonUp(0) && Time.timeScale < _maxTimeScale && OnBoard(mousePos))
                 {
                     Time.timeScale++;
-
                     StartCoroutine(FadeInFadeOut());
                 }
+#endif
+#if UNITY_ANDROID
+                Touch myTouch;
+
+                if (Input.touchCount >= 1)
+                {
+                    myTouch = Input.touches[0];
+
+                    //Se obtiene la posición del tap
+                    Vector3 pos = Camera.main.ScreenToWorldPoint(myTouch.position);
+                    pos.z = 0;
+
+                    //Cuando se hace tap, se duplica la velocidad del motor
+                    if (myTouch.phase == TouchPhase.Ended && Time.timeScale < _maxTimeScale && OnBoard(pos))
+                    {
+                        Time.timeScale++;
+                        StartCoroutine(FadeInFadeOut());
+                    }
+                }
+#endif
             }
         }
-
     }
 
     /// <summary>
@@ -176,6 +238,10 @@ public class AimController : MonoBehaviour
         return Mathf.Abs(pos.y) <= Board.BOARD_HEIGHT / 2.0f && Mathf.Abs(pos.x) <= Board.BOARD_WIDTH / 2.0f && pos.y > -(Board.BOARD_HEIGHT / 2.0f - heightOffset);
     }
 
+    /// <summary>
+    /// Corrutina que hace un Fade in y Fade Out para el modo de acelerar las bolas
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator FadeInFadeOut()
     {
         Color desiredColor = fastImage.color;
