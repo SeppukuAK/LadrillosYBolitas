@@ -23,6 +23,18 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance;
 
+    [Header("Game Initial Attributes")]
+    /// <summary>
+    /// Gemas con las que empieza el jugador al inicio
+    /// </summary>
+    [SerializeField] private uint initialGems;
+
+    /// <summary>
+    /// Número de powerUps con los que empieza el jugador al inicio
+    /// </summary>
+    [SerializeField] private uint initialPowerUps;
+
+    [Header("TextAssets")]
     /// <summary>
     /// Fichero con la información de las bolas disponibles en cada nivel
     /// </summary>
@@ -140,13 +152,13 @@ public class GameManager : MonoBehaviour
     public void ResetSaveData()
     {
         TotalStars = 0;
-        gems = 0;
+        gems = initialGems;
 
         uint numPowerUps = (uint)System.Enum.GetValues(typeof(PowerUpType)).Length;
         PowerUps = new uint[numPowerUps];
 
         for (int i = 0; i < PowerUps.Length; i++)
-            PowerUps[i] = 2;
+            PowerUps[i] = initialPowerUps;
 
         LevelData = new List<LevelData>();
 

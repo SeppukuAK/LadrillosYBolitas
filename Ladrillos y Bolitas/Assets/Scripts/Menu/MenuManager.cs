@@ -4,48 +4,61 @@ using UnityEngine.UI;
 
 /// <summary>
 /// Manager del menu
+/// Construye las celdas de los niveles
 /// </summary>
 public class MenuManager : MonoBehaviour
 {
-    [Header("UI References")]
+    [Header("Prefab References")]
     [SerializeField] private ExitUI exitUIPrefab;
     [SerializeField] private DeleteUI deleteUIPrefab;
     [SerializeField] private ShopManager shopUIPrefab;
-
     [SerializeField] private CellUI cellUIPrefab;
 
+    [Header("UI References")]
     [SerializeField] private GridLayoutGroup gridLayoutGroup;
     [SerializeField] private RectTransform panelTransform;
 
     [SerializeField] private Text gemsText;
     [SerializeField] private Text totalScoreText;
 
-    [SerializeField] private float offset;
-
-    private List<CellUI> cellList;
-
     /// <summary>
     /// Panel que se está superponiendo en la escena
     /// </summary>
     private OverlayUI overlayPanel;
 
+    /// <summary>
+    /// Crea las celdas de los niveles
+    /// </summary>
     private void Start()
     {
         overlayPanel = null;
-        cellList = new List<CellUI>();
 
         for (int i = 0; i < GameManager.Instance.MapData.Length; i++)
-        {
-            CellUI cellAux = Instantiate(cellUIPrefab, gridLayoutGroup.transform);
-            cellAux.Init(GameManager.Instance.LevelData[i].Level, GameManager.Instance.LevelData[i].Stars, GameManager.Instance.LevelData[i].Blocked);
-            cellList.Add(cellAux);
-        }
-        SetPanelSize();
+           Instantiate(cellUIPrefab, gridLayoutGroup.transform).Init(GameManager.Instance.LevelData[i].Level, GameManager.Instance.LevelData[i].Stars, GameManager.Instance.LevelData[i].Blocked);
+
+        SetGridSize();
 
         totalScoreText.text = GameManager.Instance.TotalStars.ToString();
         UpdateUI();
     }
 
+    /// <summary>
+    /// Establece el tamaño del panel
+    /// </summary>
+    private void SetGridSize()
+    {
+        int rowCell;//nFilas
+        rowCell = (gridLayoutGroup.transform.childCount / gridLayoutGroup.constraintCount) + 1;
+
+        float tamañoPanel = rowCell * (gridLayoutGroup.cellSize.y + gridLayoutGroup.spacing.y); //BOT
+
+        panelTransform.offsetMin = new Vector2(panelTransform.offsetMin.x, -tamañoPanel);
+        panelTransform.offsetMax = new Vector2(panelTransform.offsetMax.x, 0);
+    }
+
+    /// <summary>
+    /// Si se le da a "return", se spawnea el panel de exit o se destruye el overlayPanel
+    /// </summary>
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
@@ -57,17 +70,6 @@ public class MenuManager : MonoBehaviour
                 overlayPanel.Exit();
         }
 
-    }
-    void SetPanelSize()
-    {
-        int rowCell;//nFilas
-        rowCell = (cellList.Count / 5) + 1;
-
-        float tamañoPanel = rowCell * (gridLayoutGroup.cellSize.y + (gridLayoutGroup.spacing.y * 2)) - offset; //BOT
-
-        // Rect rect =  new Rect()
-        panelTransform.offsetMin = new Vector2(panelTransform.offsetMin.x, -tamañoPanel);
-        panelTransform.offsetMax = new Vector2(panelTransform.offsetMax.x, 0);
     }
 
     /// <summary>
