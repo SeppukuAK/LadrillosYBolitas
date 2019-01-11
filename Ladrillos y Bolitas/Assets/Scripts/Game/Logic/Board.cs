@@ -115,7 +115,7 @@ public class Board : MonoBehaviour
                     if (tilePrefabs[typeMap[height - i - 1, j] - 1] == null)
                         Debug.LogError("Tile: " + typeMap[height - i - 1, j] + " no implementado");
 #endif
-                    else
+                    if (tilePrefabs[typeMap[height - i - 1, j] - 1] != null)
                     {
                         Tile tile = tilePrefabs[typeMap[height - i - 1, j] - 1];
                         _board[i, j] = Instantiate(tile, transform.position + new Vector3(j, i, 0), tile.transform.rotation, transform);
