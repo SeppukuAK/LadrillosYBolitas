@@ -37,7 +37,7 @@ public class LevelManager : MonoBehaviour
     [SerializeField] private AimController aimController;
     [SerializeField] private PauseUI pauseUIPrefab;
     [SerializeField] private GameOverUI gameOverUIPrefab;
-    [SerializeField] private ShopManager shopPrefab;
+    [SerializeField] private ShopManager shopUIPrefab;
 
     [Header("UI References")]
     [SerializeField] private Image pointsFillBar;
@@ -83,7 +83,9 @@ public class LevelManager : MonoBehaviour
             {
                 pause = true;
                 Time.timeScale = 0.0f;
-                Instantiate(pauseUIPrefab).Init(this);
+
+                overlayPanel = Instantiate(pauseUIPrefab);
+                (overlayPanel as PauseUI).Init(this);
             }
             else
             {
@@ -113,15 +115,19 @@ public class LevelManager : MonoBehaviour
     public uint CurrentNumBalls { get; set; }
 
     /// <summary>
+    /// Lista de pelotas en el juego
+    /// </summary>
+    public List<Ball> Balls { get; set; }
+
+    /// <summary>
     /// Puntuación para obtener 3 estrellas
     /// </summary>
     private uint maxScore;
 
     /// <summary>
-    /// Lista de pelotas en el juego
+    /// Panel que se está superponiendo en la escena
     /// </summary>
-    public List<Ball> Balls { get; set; }
-
+    private OverlayUI overlayPanel;
 
     /// <summary>
     /// Inicializa todos los componentes, pasandole los atributos que necesitan para su funcionamiento en la escena
@@ -131,6 +137,7 @@ public class LevelManager : MonoBehaviour
         CurrentNumBalls = uint.Parse(GameManager.Instance.GameData.text.Split('\n')[GameManager.Instance.SelectedMapLevel].Split(' ', ',')[1]);        //Obtiene el numero de pelotas iniciales
         Points = 0;
         pause = false;
+        overlayPanel = null;
 
         aimController.Init(this, ballSpawner, ballVelocity, maxTimeScale);
         ballSpawner.Init(this, ballPrefab, ballSpawnTickRate);
@@ -146,12 +153,21 @@ public class LevelManager : MonoBehaviour
 
     /// <summary>
     /// Detecta el input de "return"
-    /// Pausa el juego
+    /// Pausa el juego o cierra el overlay abierto
     /// </summary>
     private void Update()
     {
-        if (!Pause && Input.GetKeyDown(KeyCode.Escape))
-            Pause = true;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (overlayPanel == null)
+                Pause = true;
+
+            else
+                overlayPanel.Exit();
+
+        }
+
+        Debug.Log(overlayPanel);
     }
 
     /// <summary>
@@ -200,7 +216,8 @@ public class LevelManager : MonoBehaviour
 
         win = board.PendingTiles == 0;
 
-        Instantiate(gameOverUIPrefab).Init(win, stars);
+        overlayPanel = Instantiate(gameOverUIPrefab);
+        (overlayPanel as GameOverUI).Init(win, stars);
         pause = true;
     }
 
@@ -228,7 +245,8 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void ShowShop()
     {
-        Instantiate(shopPrefab).SetCallbackOnDestroy(UpdatePowerUpText);
+        overlayPanel = Instantiate(shopUIPrefab);
+        overlayPanel.SetCallbackOnDestroy(UpdatePowerUpText);
         pause = true;
     }
 

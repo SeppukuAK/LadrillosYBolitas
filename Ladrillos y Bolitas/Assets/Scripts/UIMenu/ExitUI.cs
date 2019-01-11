@@ -1,23 +1,15 @@
 ﻿using UnityEngine;
 
-public class ExitUI : MonoBehaviour {
-
-    private MenuManager _menuManager;
-
-    public void Init(MenuManager menuManager)
-    {
-        _menuManager = menuManager;
-    }
-
+/// <summary>
+/// Manejador del panel de Exit
+/// </summary>
+public class ExitUI : OverlayUI
+{
+    /// <summary>
+    /// Sale del juego si se pulsa el botón
+    /// </summary>
     public void ExitGame()
     {
         Application.Quit();
     }
-
-    public void ExitMenu()
-    {
-        _menuManager.Exit = false;
-        Destroy(gameObject);
-    }
-
 }

@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-
+﻿
 /// <summary>
 /// Controlador del panel de borrado de datos
 /// </summary>
-public class DeleteUI : MonoBehaviour {
+public class DeleteUI : OverlayUI {
 
     /// <summary>
     /// Borra los datos guardados y los resetea al estado inicial 
@@ -13,13 +12,5 @@ public class DeleteUI : MonoBehaviour {
         SaveSystem.DeleteData();
         GameManager.Instance.ResetSaveData();
         MenuCanvas.Instance.PlayLevelOptions("LogoScene", true);
-    }
-
-    /// <summary>
-    /// Elimina el panel de borrado
-    /// </summary>
-    public void Exit()
-    {
-        Destroy(gameObject);
     }
 }

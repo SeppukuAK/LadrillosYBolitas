@@ -3,7 +3,6 @@
 Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtual
 
 -Sprites tienen que ser 60x60
-
 Optativo:
 
 -Cosas inviables de monetizacion

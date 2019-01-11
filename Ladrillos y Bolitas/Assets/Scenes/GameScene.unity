@@ -860,7 +860,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -99.299805, y: 0}
+  m_AnchoredPosition: {x: -99.296875, y: 0}
   m_SizeDelta: {x: 710.6, y: 250}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &361401082
@@ -1129,7 +1129,7 @@ MonoBehaviour:
     type: 2}
   gameOverUIPrefab: {fileID: 114873012658305114, guid: 885e434fd8cb7e8488cf06dfa2f4e17e,
     type: 2}
-  shopPrefab: {fileID: 114721337723461704, guid: c3b44eb8f6cd0c747a1c21924d5543d1,
+  shopUIPrefab: {fileID: 114721337723461704, guid: c3b44eb8f6cd0c747a1c21924d5543d1,
     type: 2}
   pointsFillBar: {fileID: 310788668}
   pointsText: {fileID: 1838962141}

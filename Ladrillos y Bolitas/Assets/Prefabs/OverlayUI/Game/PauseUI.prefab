@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 114091208356964922}
   - component: {fileID: 114689599721429752}
   m_Layer: 5
-  m_Name: PauseCanvas
+  m_Name: PauseUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -636,7 +636,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 114689599721429752}
-        m_MethodName: ExitPause
+        m_MethodName: Exit
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

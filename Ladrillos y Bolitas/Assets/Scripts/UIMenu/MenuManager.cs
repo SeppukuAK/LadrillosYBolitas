@@ -2,40 +2,36 @@
 using System.Collections.Generic;
 using UnityEngine.UI;
 
-public class MenuManager : MonoBehaviour {
-
+/// <summary>
+/// Manager del menu
+/// </summary>
+public class MenuManager : MonoBehaviour
+{
     [Header("UI References")]
-    [SerializeField] private Canvas canvas;
     [SerializeField] private ExitUI exitUIPrefab;
+    [SerializeField] private DeleteUI deleteUIPrefab;
+    [SerializeField] private ShopManager shopUIPrefab;
+
     [SerializeField] private CellUI cellUIPrefab;
 
     [SerializeField] private GridLayoutGroup gridLayoutGroup;
     [SerializeField] private RectTransform panelTransform;
-    [SerializeField] private ShopManager shopPrefab;
-    [SerializeField] private DeleteUI deleteUIPrefab;
 
     [SerializeField] private Text gemsText;
+    [SerializeField] private Text totalScoreText;
 
     [SerializeField] private float offset;
 
     private List<CellUI> cellList;
 
-    public bool Exit
-    {
-        get { return exit; }
-        set
-        {
-            exit = value;
+    /// <summary>
+    /// Panel que se está superponiendo en la escena
+    /// </summary>
+    private OverlayUI overlayPanel;
 
-            if (exit)
-                Instantiate(exitUIPrefab, canvas.transform).Init(this);
-
-        }
-    }
-    private bool exit;
-    
     private void Start()
     {
+        overlayPanel = null;
         cellList = new List<CellUI>();
 
         for (int i = 0; i < GameManager.Instance.MapData.Length; i++)
@@ -46,17 +42,20 @@ public class MenuManager : MonoBehaviour {
         }
         SetPanelSize();
 
+        totalScoreText.text = GameManager.Instance.TotalStars.ToString();
         UpdateUI();
     }
 
-    void Update()
+    private void Update()
     {
-        //Borra el ficherito
-        if (Input.GetKeyDown(KeyCode.B))
-            SaveSystem.DeleteData();
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (overlayPanel == null)
+                overlayPanel = Instantiate(exitUIPrefab);
 
-        if (!Exit && Input.GetKeyDown(KeyCode.Escape))
-            Exit = true;
+            else
+                overlayPanel.Exit();
+        }
 
     }
     void SetPanelSize()
@@ -64,8 +63,8 @@ public class MenuManager : MonoBehaviour {
         int rowCell;//nFilas
         rowCell = (cellList.Count / 5) + 1;
 
-        float tamañoPanel = rowCell * (gridLayoutGroup.cellSize.y + (gridLayoutGroup.spacing.y*2)) - offset ; //BOT
-        
+        float tamañoPanel = rowCell * (gridLayoutGroup.cellSize.y + (gridLayoutGroup.spacing.y * 2)) - offset; //BOT
+
         // Rect rect =  new Rect()
         panelTransform.offsetMin = new Vector2(panelTransform.offsetMin.x, -tamañoPanel);
         panelTransform.offsetMax = new Vector2(panelTransform.offsetMax.x, 0);
@@ -76,7 +75,8 @@ public class MenuManager : MonoBehaviour {
     /// </summary>
     public void ShowShop()
     {
-        Instantiate(shopPrefab).SetCallbackOnDestroy(UpdateUI);
+        overlayPanel = Instantiate(shopUIPrefab);
+        overlayPanel.SetCallbackOnDestroy(UpdateUI);
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public class MenuManager : MonoBehaviour {
     /// </summary>
     public void ShowDeletePanel()
     {
-        Instantiate(deleteUIPrefab);
+        overlayPanel = Instantiate(deleteUIPrefab);
     }
 
 }

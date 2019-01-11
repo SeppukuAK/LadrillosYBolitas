@@ -1,9 +1,8 @@
-﻿using UnityEngine;
-
+﻿
 /// <summary>
 /// Controlador del UI de la pausa
 /// </summary>
-public class PauseUI : MonoBehaviour
+public class PauseUI : OverlayUI
 {
     private LevelManager _levelManager;
 
@@ -19,7 +18,7 @@ public class PauseUI : MonoBehaviour
     /// <summary>
     /// Sale de la pausa
     /// </summary>
-    public void ExitPause()
+    public override void Exit()
     {
         _levelManager.Pause = false;
         Destroy(gameObject);

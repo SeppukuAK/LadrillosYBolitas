@@ -185,18 +185,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee06717b32a3344b8e903d472c4ac61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 1589761224}
-  exitUIPrefab: {fileID: 114641307116941784, guid: 98d66ff62f2cd434ba4cdabed57d48ee,
+  exitUIPrefab: {fileID: 114352955157555648, guid: 98d66ff62f2cd434ba4cdabed57d48ee,
+    type: 2}
+  deleteUIPrefab: {fileID: 114204260036915856, guid: 59fb9ce5ec8742c4f8a8e0d297ac9809,
+    type: 2}
+  shopUIPrefab: {fileID: 114721337723461704, guid: c3b44eb8f6cd0c747a1c21924d5543d1,
     type: 2}
   cellUIPrefab: {fileID: 114032085209986294, guid: c92a80b3fad2d494290fe3a3a58a358a,
     type: 2}
   gridLayoutGroup: {fileID: 921569687}
   panelTransform: {fileID: 921569686}
-  shopPrefab: {fileID: 114721337723461704, guid: c3b44eb8f6cd0c747a1c21924d5543d1,
-    type: 2}
-  deleteUIPrefab: {fileID: 114204260036915856, guid: 59fb9ce5ec8742c4f8a8e0d297ac9809,
-    type: 2}
   gemsText: {fileID: 1060823000}
+  totalScoreText: {fileID: 1805100293}
   offset: 800
 --- !u!4 &221992034
 Transform:
@@ -591,6 +591,11 @@ Prefab:
       propertyPath: m_Pivot.y
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 223627393863930342, guid: 1798333f1fe49c745a58ad7271529ef6,
+        type: 2}
+      propertyPath: m_SortingOrder
+      value: 2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 1798333f1fe49c745a58ad7271529ef6, type: 2}
   m_IsPrefabAsset: 0
@@ -946,7 +951,7 @@ GameObject:
   - component: {fileID: 1060823001}
   - component: {fileID: 1060823000}
   m_Layer: 5
-  m_Name: ScoreText
+  m_Name: GemsText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

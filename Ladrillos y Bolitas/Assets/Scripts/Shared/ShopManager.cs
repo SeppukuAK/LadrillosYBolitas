@@ -7,7 +7,7 @@ using UnityEngine.Advertisements;
 /// Gestiona las compras
 /// GameObject Panel
 /// </summary>
-public class ShopManager : MonoBehaviour
+public class ShopManager : OverlayUI
 {
     [Header("Shop Attributes")]
     [SerializeField] private uint adReward;
@@ -19,20 +19,6 @@ public class ShopManager : MonoBehaviour
 
     [SerializeField] private Text destroyPowerUpCostText;
     [SerializeField] private Text destroyPowerUpNumText;
-
-    /// <summary>
-    /// Función a la que tiene que llamar cuando es destruido
-    /// </summary>
-    private System.Action _destroyCallback;
-
-    /// <summary>
-    /// Establece la función a la que tiene que llamar cuando es destruido
-    /// </summary>
-    /// <param name="destroyCallback"></param>
-    public void SetCallbackOnDestroy(System.Action destroyCallback)
-    {
-        _destroyCallback = destroyCallback;
-    }
 
     /// <summary>
     /// Inicializa los textos del UI
@@ -62,16 +48,6 @@ public class ShopManager : MonoBehaviour
         }
     }
 
-    /// <summary>
-    /// Cuando se pulsa la 'x' de salir. Se destruye el canvas y se llama al destroyCallback
-    /// </summary>
-    public void Exit()
-    {
-        if (_destroyCallback != null)
-            _destroyCallback.Invoke();
-
-        Destroy(this.gameObject);
-    }
 
     /// <summary>
     /// Empieza un anuncio

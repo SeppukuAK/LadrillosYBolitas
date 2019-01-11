@@ -4,7 +4,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Manejador del UI del GameOver
 /// </summary>
-public class GameOverUI : MonoBehaviour
+public class GameOverUI : OverlayUI
 {
     [SerializeField] private Text levelText;
     [SerializeField] private Text statusText;
@@ -28,6 +28,7 @@ public class GameOverUI : MonoBehaviour
             {
                 GameManager.Instance.LevelData[(int)GameManager.Instance.SelectedMapLevel + 1].Blocked = false;
                 GameManager.Instance.LevelData[(int)GameManager.Instance.SelectedMapLevel].Stars = stars;
+                GameManager.Instance.TotalStars += stars;
                 GameManager.Instance.SaveData();
             }
 
@@ -66,6 +67,13 @@ public class GameOverUI : MonoBehaviour
     public void GoMenu()
     {
         MenuCanvas.Instance.PlayLevelOptions("MenuScene", true);
+    }
+
+    /// <summary>
+    /// Anula el salir. No se puede quitar el panel de GameOver
+    /// </summary>
+    public override void Exit()
+    {
     }
 
 }
