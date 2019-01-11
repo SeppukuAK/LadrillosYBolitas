@@ -12,6 +12,7 @@ public class ShopManager : OverlayUI
     [Header("Shop Attributes")]
     [SerializeField] private uint adReward;
     [SerializeField] private uint destroyPowerUpCost;
+    [SerializeField] private uint earthquakePowerUpCost;
 
     [Header("References")]
     [SerializeField] private Text gemsText;
@@ -20,16 +21,22 @@ public class ShopManager : OverlayUI
     [SerializeField] private Text destroyPowerUpCostText;
     [SerializeField] private Text destroyPowerUpNumText;
 
+    [SerializeField] private Text earthquakePowerUpCostText;
+    [SerializeField] private Text earthquakePowerUpNumText;
+
     /// <summary>
     /// Inicializa los textos del UI
     /// </summary>
     private void Start()
     {
         gemsRewardText.text = adReward.ToString();
-        destroyPowerUpCostText.text = destroyPowerUpCost.ToString();
-
         gemsText.text = GameManager.Instance.Gems.ToString();
+
+        destroyPowerUpCostText.text = destroyPowerUpCost.ToString();
         destroyPowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)PowerUpType.DestroyRow].ToString();
+
+        earthquakePowerUpCostText.text = earthquakePowerUpCost.ToString();
+        earthquakePowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)PowerUpType.Earthquake].ToString();
     }
 
     /// <summary>
@@ -48,6 +55,21 @@ public class ShopManager : OverlayUI
         }
     }
 
+    /// <summary>
+    /// Es llamado cuando se pulsa el botón de comprar powerUp
+    /// Comprueba si hay suficientes gemas y lo compra, actualizando el texto
+    /// </summary>
+    public void BuyEarthquakePowerUp()
+    {
+        if (GameManager.Instance.Gems >= earthquakePowerUpCost)
+        {
+            GameManager.Instance.Gems -= earthquakePowerUpCost;
+            gemsText.text = GameManager.Instance.Gems.ToString();
+
+            GameManager.Instance.SetNumPowerUp(PowerUpType.Earthquake, GameManager.Instance.PowerUps[(int)PowerUpType.Earthquake] + 1);
+            earthquakePowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)PowerUpType.Earthquake].ToString();
+        }
+    }
 
     /// <summary>
     /// Empieza un anuncio
@@ -69,7 +91,8 @@ public class ShopManager : OverlayUI
         {
             case ShowResult.Finished:
                 GameManager.Instance.Gems += adReward; //Incrementamos el número de monedas 
-                gemsText.text = GameManager.Instance.Gems.ToString();
+                if (gemsText != null)
+                    gemsText.text = GameManager.Instance.Gems.ToString();
                 break;
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             case ShowResult.Skipped:

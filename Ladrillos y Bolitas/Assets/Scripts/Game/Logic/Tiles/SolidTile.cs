@@ -10,7 +10,7 @@ public class SolidTile : Tile
     private Text healthText;
     
     /// <summary>
-    /// Cuando es modificado se actualiza el texto
+    /// Cuando es modificado se actualiza el texto y comprueba si tiene que ser destruido
     /// </summary>
     public override uint Value
     {
@@ -18,6 +18,10 @@ public class SolidTile : Tile
         set
         {
             this.value = value;
+
+            if (Value <= 0)
+                _onDestroyCallBack(this);
+
             healthText.text = value.ToString();
         }
     }
@@ -68,9 +72,6 @@ public class SolidTile : Tile
     private void OnCollisionEnter2D(Collision2D collision)
     {
         Value--;
-        if (Value == 0)
-            _onDestroyCallBack(this);
-
     }
 
 }

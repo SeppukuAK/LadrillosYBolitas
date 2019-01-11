@@ -277,6 +277,23 @@ public class LevelManager : MonoBehaviour
             ShowShop();
     }
 
+    /// <summary>
+    /// PowerUp: Destruye un número diferente de cada bloque
+    /// Comprueba si se dispone de PowerUp y si no, se spawnea la tienda
+    /// </summary>
+    public void Earthquake()
+    {
+        if (GameManager.Instance.PowerUps[(int)PowerUpType.Earthquake] > 0)
+        {
+            GameManager.Instance.SetNumPowerUp(PowerUpType.Earthquake, GameManager.Instance.PowerUps[(int)PowerUpType.Earthquake] - 1);
+            UpdatePowerUpText();
+            board.Earthquake();
+        }
+        else
+            ShowShop();
+    }
+
+
     #endregion PowerUps
 
 

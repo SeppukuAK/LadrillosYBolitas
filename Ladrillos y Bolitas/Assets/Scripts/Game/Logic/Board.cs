@@ -334,6 +334,34 @@ public class Board : MonoBehaviour
             _levelManager.LevelEnd();
 
     }
+    /// <summary>
+    /// PowerUp: Destruye un número diferente de cada bloque
+    /// </summary>
+    public void Earthquake()
+    {
+        foreach (Tile tile in _board)
+        {
+            if (tile != null && tile.MustBeDestroyed())
+            {
+                uint random = (uint)UnityEngine.Random.Range(1, 5);
+
+                if (tile.Value < random)
+                    tile.Value = 0;
+
+                else
+                    tile.Value -= random;
+                
+            }
+        }
+
+        tilesDestroyedThisRound = 0;
+
+        //Comprobamos si ha destruido todos los bloques
+        if (PendingTiles == 0)
+            _levelManager.LevelEnd();
+
+    }
+
 
     #endregion PowerUps
 }

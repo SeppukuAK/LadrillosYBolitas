@@ -14,7 +14,7 @@ public class LevelData
 /// <summary>
 /// Tipos de powerUp
 /// </summary>
-public enum PowerUpType { DestroyRow };
+public enum PowerUpType { DestroyRow ,Earthquake};
 
 /// <summary>
 /// Clase persistente entre escenas
