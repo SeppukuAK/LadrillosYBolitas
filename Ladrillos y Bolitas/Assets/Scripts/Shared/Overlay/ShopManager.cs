@@ -71,12 +71,14 @@ public class ShopManager : OverlayUI
                 GameManager.Instance.Gems += adReward; //Incrementamos el número de monedas 
                 gemsText.text = GameManager.Instance.Gems.ToString();
                 break;
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
             case ShowResult.Skipped:
                 Debug.Log("No se ha visto el video entero");
                 break;
             case ShowResult.Failed:
                 Debug.Log("No se ha podido ver el anuncio");
                 break;
+#endif
         }
     }
 }

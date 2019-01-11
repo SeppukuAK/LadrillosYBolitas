@@ -110,11 +110,11 @@ public class Board : MonoBehaviour
                 //Si hay algún tipo de bloque
                 if (typeMap[height - i - 1, j] > 0)
                 {
-                    //TODO: DEBUG
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
                     //Si el bloque aún no ha sido implementado
                     if (tilePrefabs[typeMap[height - i - 1, j] - 1] == null)
                         Debug.LogError("Tile: " + typeMap[height - i - 1, j] + " no implementado");
-
+#endif
                     else
                     {
                         Tile tile = tilePrefabs[typeMap[height - i - 1, j] - 1];

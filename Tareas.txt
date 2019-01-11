@@ -5,15 +5,12 @@ Objetivo: Desarrollo para móvil con Unity. Progreso, publicidad y moneda virtua
 -Sprites tienen que ser 60x60
 Optativo:
 
--Cosas inviables de monetizacion
 -Acelerómetro
 
 Cosas que se me ocurren:
 TODO: Duda: Utilizar las opciones del placeholder???
 -Mas potenciadores.(Info de ello en el documento)
 -Mas bloques especiales
--Limpieza de todo: UI
--GameManager limpiar
 
 Limpiar todo el aimController
 Las bolas se atascan mucho
@@ -23,7 +20,6 @@ Cosas que importan bastante poco:
 -Revisar grafica
 -Panel de ayuda de powerUps
 
--Revisar ScrollView
 Entrega: mirar
 
 ---------ENUNCIADO----------

@@ -15,6 +15,7 @@ public class GameOverUI : OverlayUI
 
     /// <summary>
     /// Inicializa el Panel con los atributos necesarios
+    /// Si ha ganado, guarda la partida
     /// </summary>
     /// <param name="win"></param>
     /// <param name="stars"></param>
