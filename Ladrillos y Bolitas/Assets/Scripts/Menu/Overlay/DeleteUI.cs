@@ -11,6 +11,6 @@ public class DeleteUI : OverlayUI {
     {
         SaveSystem.DeleteData();
         GameManager.Instance.ResetSaveData();
-        MenuCanvas.Instance.PlayLevelOptions("LogoScene", true);
+        LoadSceneManager.Instance.PlayLevel("LogoScene");
     }
 }

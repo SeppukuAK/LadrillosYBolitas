@@ -166,8 +166,6 @@ public class LevelManager : MonoBehaviour
                 overlayPanel.Exit();
 
         }
-
-        Debug.Log(overlayPanel);
     }
 
     /// <summary>
@@ -269,9 +267,9 @@ public class LevelManager : MonoBehaviour
     /// </summary>
     public void DestroyRow()
     {
-        if (GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow] > 0)
+        if (GameManager.Instance.PowerUps[(int)PowerUpType.DestroyRow] > 0)
         {
-            GameManager.Instance.SetNumPowerUp(GameManager.PowerUpType.DestroyRow, GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow] - 1);
+            GameManager.Instance.SetNumPowerUp(PowerUpType.DestroyRow, GameManager.Instance.PowerUps[(int)PowerUpType.DestroyRow] - 1);
             UpdatePowerUpText();
             board.DestroyRow();
         }

@@ -50,7 +50,7 @@ public class GameOverUI : OverlayUI
     public void NextLevel()
     {
         GameManager.Instance.SelectedMapLevel++;
-        MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
+        LoadSceneManager.Instance.PlayLevel("GameScene");
     }
 
     /// <summary>
@@ -58,7 +58,7 @@ public class GameOverUI : OverlayUI
     /// </summary>
     public void ResetLevel()
     {
-        MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
+        LoadSceneManager.Instance.PlayLevel("GameScene");
     }
 
     /// <summary>
@@ -66,7 +66,7 @@ public class GameOverUI : OverlayUI
     /// </summary>
     public void GoMenu()
     {
-        MenuCanvas.Instance.PlayLevelOptions("MenuScene", true);
+        LoadSceneManager.Instance.PlayLevel("MenuScene");
     }
 
     /// <summary>

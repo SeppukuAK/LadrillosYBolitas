@@ -36,7 +36,7 @@ public class CellUI : MonoBehaviour
         if (!_isBlocked)
         {
             GameManager.Instance.SelectedMapLevel = _level - 1;
-            MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
+            LoadSceneManager.Instance.PlayLevel("GameScene");
         }
     }
 }

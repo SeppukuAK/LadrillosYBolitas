@@ -30,7 +30,7 @@ public class PauseUI : OverlayUI
     public void ResetLevel()
     {
         _levelManager.Pause = false;
-        MenuCanvas.Instance.PlayLevelOptions("GameScene", true);
+        LoadSceneManager.Instance.PlayLevel("GameScene");
         Destroy(gameObject);
     }
 
@@ -40,7 +40,7 @@ public class PauseUI : OverlayUI
     public void GoMenu()
     {
         _levelManager.Pause = false;
-        MenuCanvas.Instance.PlayLevelOptions("MenuScene", true);
+        LoadSceneManager.Instance.PlayLevel("MenuScene");
         Destroy(gameObject);
     }
 }

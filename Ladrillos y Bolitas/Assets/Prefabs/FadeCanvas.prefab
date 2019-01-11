@@ -9,36 +9,36 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1232094402499210}
+  m_RootGameObject: {fileID: 1208975137222078}
   m_IsPrefabAsset: 1
---- !u!1 &1232094402499210
+--- !u!1 &1208975137222078
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 224477155985278866}
-  - component: {fileID: 223627393863930342}
-  - component: {fileID: 114694219375301954}
-  - component: {fileID: 114827468347926078}
+  - component: {fileID: 224711326304523678}
+  - component: {fileID: 223926880230996466}
+  - component: {fileID: 114455041972075382}
+  - component: {fileID: 114278389480601702}
   m_Layer: 5
-  m_Name: MenuCanvas
+  m_Name: FadeCanvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!1 &1244707123738254
+--- !u!1 &1425216088310946
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 224326081963263354}
-  - component: {fileID: 222783787212924390}
-  - component: {fileID: 114143244699736542}
+  - component: {fileID: 224162138432083030}
+  - component: {fileID: 222336951994759432}
+  - component: {fileID: 114259468789011856}
   m_Layer: 5
   m_Name: FaderImage
   m_TagString: Untagged
@@ -46,12 +46,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!114 &114143244699736542
+--- !u!114 &114259468789011856
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1244707123738254}
+  m_GameObject: {fileID: 1425216088310946}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: -765806418, guid: f70555f144d8491a825f0804e09c671c, type: 3}
@@ -73,12 +73,25 @@ MonoBehaviour:
   m_FillAmount: 1
   m_FillClockwise: 1
   m_FillOrigin: 0
---- !u!114 &114694219375301954
+--- !u!114 &114278389480601702
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1232094402499210}
+  m_GameObject: {fileID: 1208975137222078}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae7c6ec16e666ff498aeb1cb606853ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  faderImage: {fileID: 114259468789011856}
+  sceneFadeTime: 1
+--- !u!114 &114455041972075382
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1208975137222078}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 1980459831, guid: f70555f144d8491a825f0804e09c671c, type: 3}
@@ -94,32 +107,19 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
---- !u!114 &114827468347926078
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1232094402499210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1cbec417725a4574fae3ba80654033fd, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  FaderImage: {fileID: 114143244699736542}
-  FadeTime: 1
---- !u!222 &222783787212924390
+--- !u!222 &222336951994759432
 CanvasRenderer:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1244707123738254}
+  m_GameObject: {fileID: 1425216088310946}
   m_CullTransparentMesh: 0
---- !u!223 &223627393863930342
+--- !u!223 &223926880230996466
 Canvas:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1232094402499210}
+  m_GameObject: {fileID: 1208975137222078}
   m_Enabled: 1
   serializedVersion: 3
   m_RenderMode: 0
@@ -132,19 +132,19 @@ Canvas:
   m_SortingBucketNormalizedSize: 0
   m_AdditionalShaderChannelsFlag: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_TargetDisplay: 0
---- !u!224 &224326081963263354
+--- !u!224 &224162138432083030
 RectTransform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1244707123738254}
+  m_GameObject: {fileID: 1425216088310946}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 224477155985278866}
+  m_Father: {fileID: 224711326304523678}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: -0.000000031789146}
@@ -152,17 +152,17 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!224 &224477155985278866
+--- !u!224 &224711326304523678
 RectTransform:
   m_ObjectHideFlags: 1
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1232094402499210}
+  m_GameObject: {fileID: 1208975137222078}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_Children:
-  - {fileID: 224326081963263354}
+  - {fileID: 224162138432083030}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

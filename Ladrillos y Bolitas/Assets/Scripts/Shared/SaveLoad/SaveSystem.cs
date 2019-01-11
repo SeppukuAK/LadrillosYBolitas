@@ -8,8 +8,10 @@ using System.Runtime.Serialization.Formatters.Binary;
 /// </summary>
 public static class SaveSystem
 {
-    //Ruta donde se guarda. Usa una ruta propia del sistema operativo donde se ejecuta
-    private static string path = Application.persistentDataPath + "/LadrillosYBolitas.ab";
+    /// <summary>
+    /// Ruta donde se guarda. Usa una ruta propia del sistema operativo donde se ejecuta
+    /// </summary>
+    private static string path = Application.persistentDataPath + "/LadrillosYBolas.data";
 
     /// <summary>
     /// Guarda el estado del juego en un fichero serializado
@@ -33,11 +35,6 @@ public static class SaveSystem
         //Hay que cerrarlo siempre
         stream.Close();
     }
-    public static void DeleteData()
-    {
-        File.Delete(path);
-        Debug.Log("archivo borrado");
-    }
 
     /// <summary>
     /// Carga el fichero serializado
@@ -58,5 +55,13 @@ public static class SaveSystem
         else
             return null;
 
+    }
+
+    /// <summary>
+    /// Borra los archivos de guardado
+    /// </summary>
+    public static void DeleteData()
+    {
+        File.Delete(path);
     }
 }

@@ -29,7 +29,7 @@ public class ShopManager : OverlayUI
         destroyPowerUpCostText.text = destroyPowerUpCost.ToString();
 
         gemsText.text = GameManager.Instance.Gems.ToString();
-        destroyPowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow].ToString();
+        destroyPowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)PowerUpType.DestroyRow].ToString();
     }
 
     /// <summary>
@@ -43,8 +43,8 @@ public class ShopManager : OverlayUI
             GameManager.Instance.Gems -= destroyPowerUpCost;
             gemsText.text = GameManager.Instance.Gems.ToString();
 
-            GameManager.Instance.SetNumPowerUp(GameManager.PowerUpType.DestroyRow, GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow] + 1);
-            destroyPowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)GameManager.PowerUpType.DestroyRow].ToString();
+            GameManager.Instance.SetNumPowerUp(PowerUpType.DestroyRow, GameManager.Instance.PowerUps[(int)PowerUpType.DestroyRow] + 1);
+            destroyPowerUpNumText.text = "x" + GameManager.Instance.PowerUps[(int)PowerUpType.DestroyRow].ToString();
         }
     }
 

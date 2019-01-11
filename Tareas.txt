@@ -23,6 +23,7 @@ Cosas que importan bastante poco:
 -Revisar grafica
 -Panel de ayuda de powerUps
 
+-Revisar ScrollView
 Entrega: mirar
 
 ---------ENUNCIADO----------

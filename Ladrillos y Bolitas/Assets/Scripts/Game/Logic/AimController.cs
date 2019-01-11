@@ -180,9 +180,9 @@ public class AimController : MonoBehaviour
     {
         Color desiredColor = fastImage.color;
         desiredColor.a = 1.0f;
-        StartCoroutine(MenuCanvas.FadeImage(fastImage, fastImageDuration, desiredColor));
+        StartCoroutine(UtilitiesManager.FadeImage(fastImage, fastImageDuration, desiredColor));
         yield return new WaitForSeconds(fastImageDuration);
         desiredColor.a = 0.0f;
-        StartCoroutine(MenuCanvas.FadeImage(fastImage, fastImageDuration, desiredColor));
+        StartCoroutine(UtilitiesManager.FadeImage(fastImage, fastImageDuration, desiredColor));
     }
 }

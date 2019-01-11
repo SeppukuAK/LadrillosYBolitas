@@ -33,5 +33,4 @@ public class SaveDataGame
         }
     }
 
-    //TODO: PowerUps
 }
