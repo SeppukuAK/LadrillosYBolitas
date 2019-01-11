@@ -50,6 +50,7 @@ public class GameOverUI : OverlayUI
     /// </summary>
     public void NextLevel()
     {
+        nextLevelButton.enabled = false;
         GameManager.Instance.SelectedMapLevel++;
         LoadSceneManager.Instance.PlayLevel("GameScene");
     }
